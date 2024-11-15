@@ -4,6 +4,8 @@ import { User } from "@/models/User"
 import { getUsers } from "@/services/userService"
 import { useState, useEffect } from 'react';
 
+import { ArrowUpDown } from "lucide-react";
+
 import { Button } from "../ui/button"
 
 import { MoreHorizontal } from "lucide-react";
@@ -27,7 +29,17 @@ const columns: ColumnDef<User>[] = [
     },
     {
         accessorKey: "email",
-        header: "Email",
+        header: ({ column }) => {
+            return (
+                <Button 
+                    variant={"ghost"} 
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Email
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
     },
     {
         id: "actions",
