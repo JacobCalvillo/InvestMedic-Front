@@ -6,6 +6,7 @@ import { Register } from './pages/Register.tsx'
 import { Dashboard } from './pages/Dashboard.tsx'
 import { Patient } from './pages/Patient.tsx'
 import { Appointment } from './pages/Appointment.tsx'
+import Success  from './pages/Success.tsx'
 import ModeToggle from './components/mode-toggle.tsx'
 import ErrorPage from './pages/error-page.tsx'
 import './index.css'
@@ -35,6 +36,11 @@ const router = createBrowserRouter([
   {
     path: '/appointment',
     element: <Appointment />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path:'/success',
+    element: <Success />,
     errorElement: <ErrorPage />,
   }
 ])

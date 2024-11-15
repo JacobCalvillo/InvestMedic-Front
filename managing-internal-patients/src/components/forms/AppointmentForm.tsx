@@ -61,15 +61,13 @@ const AppointmentForm = ({type}: {type: "create" | "cancel" | "schedule"}) => {
                     status: status
                 }
                 //const newAppointment = await createAppointment(appointment);
-                console.log(newAppointment);
+                console.log(appointment);
             }
             
 
         } catch (error) {
         console.log(error);
         }
-
-
 
         setIsLoading(false);
     }

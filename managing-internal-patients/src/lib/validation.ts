@@ -1,5 +1,3 @@
-
-
 import { z } from "zod"
 
 const loginValidation = z.object({
@@ -113,5 +111,7 @@ function getAppointmentValidation(type: string) {
             return ScheduleAppointmentValidation;
         }
       }
+
+const 
 
 export { loginValidation, registerValidation, patientValidation, CreateAppointmentValidation, ScheduleAppointmentValidation, CancelAppointmentValidation, getAppointmentValidation };
