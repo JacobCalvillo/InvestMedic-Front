@@ -112,6 +112,5 @@ function getAppointmentValidation(type: string) {
         }
       }
 
-const 
 
 export { loginValidation, registerValidation, patientValidation, CreateAppointmentValidation, ScheduleAppointmentValidation, CancelAppointmentValidation, getAppointmentValidation };

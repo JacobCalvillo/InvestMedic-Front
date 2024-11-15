@@ -9,7 +9,7 @@ const login = async (email: string, password: string) => {
         })
 
 
-        return response.data.data || null;
+        return response.data || null;
     } catch (error) {
         console.error("Error during login:", error);
         return null;
@@ -32,4 +32,14 @@ const register = async (user: User) => {
     }
 }
 
-export { login, register };
+const getUsers = async() : Promise<User[]> => {
+    try {
+        const response = await axiosInstance.get('/users');
+        return response.data || null;
+    } catch (error) {
+        console.error("Error during login:", error);
+        return [];
+    }
+}
+
+export { login, register, getUsers };

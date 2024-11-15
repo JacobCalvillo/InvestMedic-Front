@@ -1,3 +1,4 @@
+
 import {
     Sidebar,
     SidebarContent,
@@ -10,38 +11,10 @@ import {
     SidebarMenuButton,
     SidebarMenuItem
   } from "@/components/ui/sidebar"
-  
-import { Calendar , Home, Inbox, Search, Settings } from "lucide-react"
-  
-const items  = [
-  {
-    title:"Home",
-    icon:Home,
-    url:"/dashboard",
-  },
-  {
-    title:"Inbox",
-    icon:Inbox,
-    url:"#",
-  },
-  {
-    title:"Calendar",
-    icon:Calendar,
-    url:"#",  
-  },
-  {
-    title:"Payments",
-    icon:Search,
-    url:"#",
-  },
-  {
-    title:"Appointments",
-    icon:Settings,
-    url:"#",
-  },
-]
 
-   function AppSidebar() {
+  import { AppSidebarProps } from "@/lib/interfaces";
+   function AppSidebar({items, onSelect}: AppSidebarProps) {
+
     return (
       <Sidebar variant='sidebar' collapsible='icon'>
         <SidebarHeader />
@@ -52,11 +25,14 @@ const items  = [
               <SidebarMenu>
                 {items.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <a href={item.url}>
+                    <SidebarMenuButton 
+                      asChild
+                      onClick={() => onSelect(item.component)}
+                    >
+                      <button>
                         <item.icon />
                         <span>{item.title}</span>
-                      </a>
+                      </button>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
