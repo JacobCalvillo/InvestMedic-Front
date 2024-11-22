@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Login } from './pages/Login.tsx'
 import { Register } from './pages/Register.tsx'
-import { Dashboard } from './pages/Dashboard.tsx'
+import { MainRenderer } from './pages/MainRenderer.tsx'
 import { Patient } from './pages/Patient.tsx'
 import { Appointment } from './pages/Appointment.tsx'
 import Success  from './pages/Success.tsx'
@@ -29,8 +29,8 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path:'/dashboard',
-    element: <Dashboard />,
+    path:'/main',
+    element: <MainRenderer />,
     errorElement: <ErrorPage />,
   },
   {
@@ -48,7 +48,7 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App>
-      <div className='bg-zinc-900'>
+      <div>
         <RouterProvider router={router} />
           <ModeToggle />
       </div>

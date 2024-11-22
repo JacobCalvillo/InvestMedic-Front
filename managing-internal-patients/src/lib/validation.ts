@@ -101,6 +101,13 @@ const CancelAppointmentValidation = z.object({
           .max(500, "Reason must be at most 500 characters"),
 });
 
+const PaymentValidation = z.object({
+        amount: z.number(),
+        currency: z.string(),
+        description: z.string(),
+        transactionId: z.string(),
+      });
+
 function getAppointmentValidation(type: string) {
         switch (type) {
           case "create":
@@ -113,4 +120,14 @@ function getAppointmentValidation(type: string) {
       }
 
 
-export { loginValidation, registerValidation, patientValidation, CreateAppointmentValidation, ScheduleAppointmentValidation, CancelAppointmentValidation, getAppointmentValidation };
+export 
+{ 
+        loginValidation, 
+        registerValidation, 
+        patientValidation, 
+        CreateAppointmentValidation, 
+        ScheduleAppointmentValidation, 
+        CancelAppointmentValidation, 
+        getAppointmentValidation,
+        PaymentValidation
+};

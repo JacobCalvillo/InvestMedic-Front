@@ -1,30 +1,30 @@
-import React from "react";
-import { SidebarLayout } from "../components/SidebarLayout";
-import { TableUsers } from "../components/users/TableUsers";
-import { Calendar, Home, Inbox, Bolt, Banknote, Users } from "lucide-react";
-
-// Define los elementos del sidebar y sus componentes asociados
-const items = [
-  { title: "Home", icon: Home, component: <div>Home Component</div> },
-  { title: "Users", icon: Users, component: <TableUsers /> },
-  { title: "Inbox", icon: Inbox, component: <div>Inbox Component</div> },
-  { title: "Calendar", icon: Calendar, component: <div>Calendar Component</div> },
-  { title: "Payments", icon: Banknote, component: <div>Payments Component</div> },
-  { title: "Services", icon: Bolt, component: <div>Services Component</div> },
-];
+import { CustomAreaChart } from "@/components/CustomAreaChart"
+import { CustomPieChart } from "@/components/CustomPieChart"
+import { CustomBarChart } from "@/components/CustomBarChart"
+import { CustomLineChart } from "@/components/CustomLineChart"
 
 const Dashboard = () => {
-  const [activeComponent, setActiveComponent] = React.useState(items[0].component);
+    return (
+        <div> 
+            <div className="py-16 px-8">    
+                <div className="grid grid-rows-2 grid-cols-3 gap-4">
+                    <div className="container">
+                        <CustomAreaChart />
+                    </div>
+                    <div className="container">
+                        <CustomPieChart />
+                    </div>
+                    <div className="container ">
+                        <CustomBarChart />
+                    </div>
+                    <div className="container col-span-3">
+                        <CustomLineChart />
+                    </div>
+                </div>
+            </div>  
+        </div>
+    )
+}
 
-  return (
-    <SidebarLayout 
-      items={items} 
-      activeComponent={activeComponent} 
-      setActiveComponent={setActiveComponent}
-    >
-      {activeComponent}
-    </SidebarLayout>
-  );
-};
 
-export { Dashboard };
+export { Dashboard }

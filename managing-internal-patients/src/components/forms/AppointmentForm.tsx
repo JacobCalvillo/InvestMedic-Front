@@ -7,18 +7,21 @@ import { Form } from "../ui/form"
 import CustomFormField from "@/components/CustomFormField"
 import { Doctors, FormFieldType } from "../../constants/index"
 import SubmitButton from "../SubmitButton"
-import { useLocation, useNavigate } from "react-router-dom"
+// import { useLocation, useNavigate } from "react-router-dom"
 import { SelectItem } from "../ui/select"
+import PaymentDialog from "./PaymentDialog"
+
 
 
 const AppointmentForm = ({type}: {type: "create" | "cancel" | "schedule"}) => {
+    const [isLoading, setIsLoading] = React.useState(false);
+    const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = React.useState('');
 
-    const location = useLocation();
-    const patientId = location.state?.patientId;
+    // const location = useLocation();
+    // const patientId = location.state?.patientId;
 
-    const navigate = useNavigate();
-
-    const [isLoading, setIsLoading] = React.useState(false)
+    // const navigate = useNavigate();
 
     const AppointmentFormValidation = getAppointmentValidation(type);
 
@@ -36,41 +39,18 @@ const AppointmentForm = ({type}: {type: "create" | "cancel" | "schedule"}) => {
     // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof AppointmentFormValidation>) {
         setIsLoading(true);
-        
-        let status;
-        switch (type) {
-        case "schedule":
-            status = "SCHEDULED";
-            break;
-        case "cancel":
-            status = "CANCELLED";
-            break;
-        default:
-            status = "PENDING";
-            break;
-        }
 
         try {
-            if(type === 'create' && userId) {
-                const appointment = { 
-                    patientId: patientId,
-                    doctorId: values.primaryPhysician.id!,
-                    schedule: new Date(values.schedule),
-                    reason: values.reason,
-                    note: values.note,
-                    status: status
-                }
-                //const newAppointment = await createAppointment(appointment);
-                console.log(appointment);
-            }
-            
-
+            console.log("Form submitted:", values);
+            // Add your API logic here
+            setIsDialogOpen(false)
         } catch (error) {
-        console.log(error);
+            console.error(error);
         }
 
         setIsLoading(false);
     }
+
     let buttonLabel;
 
     switch (type) {
@@ -92,8 +72,9 @@ const AppointmentForm = ({type}: {type: "create" | "cancel" | "schedule"}) => {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex-1">
 
         <section className="mb-12 space-y-4">
-            <p className="text-3xl">New Appointment</p>
+            <p className="text-3xl">Agenda tu Cita</p>
         </section>
+
         {type !== "cancel" && (
             <>
                 <CustomFormField
@@ -106,14 +87,14 @@ const AppointmentForm = ({type}: {type: "create" | "cancel" | "schedule"}) => {
                     {Doctors.map((doctor) => (
                     <SelectItem key={doctor.name} value={doctor.name}>
                         <div className="flex cursor-pointer items-center gap-2">
-                        <img
-                            src={doctor.image}
-                            alt={doctor.name}
-                            width={32}
-                            height={32}
-                            className="rounded-full border border-dark-500"
-                        />
-                        <p>{doctor.name}</p>
+                            <img
+                                src={doctor.image}
+                                alt={doctor.name}
+                                width={32}
+                                height={32}
+                                className="rounded-full border border-dark-500"
+                            />
+                            <p>{doctor.name}</p>
                         </div>
                     </SelectItem>
                     ))}
@@ -125,7 +106,7 @@ const AppointmentForm = ({type}: {type: "create" | "cancel" | "schedule"}) => {
                     iconSrc="/calendar-regular.svg"
                     iconAlt="calendar icon"
                     name="schedule"
-                    label="Expected appointment date"
+                    label="Fecha de la Cita"
                     showTimeSelect
                     dateFormat="dd/MM/yyyy hh:mm aa"
                 />
@@ -146,7 +127,9 @@ const AppointmentForm = ({type}: {type: "create" | "cancel" | "schedule"}) => {
                         label="Notas"
                         placeholder="Ingresa tus notas"
                     />
+
                 </div>
+                
             </>
         )}
         {type === "cancel" && (
@@ -158,14 +141,24 @@ const AppointmentForm = ({type}: {type: "create" | "cancel" | "schedule"}) => {
                 placeholder="Registra el motivo de la cancelacion"
             />
         )}
-       
-        
-        <SubmitButton  
-            isLoading={isLoading} 
-            className={`${type === "cancel" ? "bg-red-800 text-white" : "shad-primary-btn"} w-full`} 
-            >
-                {buttonLabel}
+
+        <SubmitButton
+            type="button"
+            isLoading={isLoading}
+            className={`${type === "cancel" ? "bg-red-800 text-white" : "shad-primary-btn"} w-full`}
+            onClick={() => setIsDialogOpen(true)}
+            
+        >
+            {buttonLabel}
         </SubmitButton>
+
+        <PaymentDialog 
+            paymentMethod={selectedPaymentMethod} 
+            isDialogOpen={isDialogOpen} 
+            handleDialogClose={() => setIsDialogOpen(false)}
+            setSelectedPaymentMethod={setSelectedPaymentMethod}
+        />
+        
       </form>
     </Form>
   )

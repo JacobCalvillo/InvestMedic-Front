@@ -52,7 +52,7 @@ const RegisterForm = () => {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex-1">
 
         <section className="mb-12 space-y-4">
-            <p className="text-3xl">Register</p>
+            <p className="text-3xl">Registrate.</p>
         </section>
 
 

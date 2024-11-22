@@ -7,11 +7,11 @@ const SidebarLayout = ({ items, activeComponent, setActiveComponent } : SidebarL
   const [open, setOpen] = React.useState(false);
 
   return (
-    <SidebarProvider open={open} onOpenChange={setOpen} defaultOpen>
+    <SidebarProvider open={open} onOpenChange={setOpen} defaultOpen className="w-full">
       <div className="flex w-full">
         <AppSidebar items={items} onSelect={setActiveComponent} />
         <SidebarTrigger />
-        <main className="flex justify-center w-full">
+        <main className="flex-1">
           {activeComponent}
         </main>
       </div>
