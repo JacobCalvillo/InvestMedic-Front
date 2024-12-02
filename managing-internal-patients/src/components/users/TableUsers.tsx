@@ -3,11 +3,8 @@ import { ColumnDef } from "@tanstack/react-table"
 import { User } from "@/models/User"
 import { getUsers } from "@/services/userService"
 import { useState, useEffect } from 'react';
-
 import { ArrowUpDown } from "lucide-react";
-
 import { Button } from "../ui/button"
-
 import { MoreHorizontal } from "lucide-react";
 
 import {

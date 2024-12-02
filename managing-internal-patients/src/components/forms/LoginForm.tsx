@@ -37,8 +37,10 @@ const LoginForm = () => {
         return;
       }
 
-      if (user) {
-        navigate('/dashboard');
+      if (user.role === 'USER') {
+        navigate('/main');
+      } else {
+        navigate('/user/page');
       }
 
     } catch (error) {

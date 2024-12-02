@@ -1,48 +1,95 @@
-
+import * as React from "react"
+import { SearchForm } from '@/components/search-form'
 import {
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarGroup,
-    SidebarGroupContent,
-    SidebarGroupLabel,
-    SidebarHeader,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem
-  } from "@/components/ui/sidebar"
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarRail,
+} from "@/components/ui/sidebar"
 
-  import { AppSidebarProps } from "@/lib/interfaces";
-   function AppSidebar({items, onSelect}: AppSidebarProps) {
+const data = {
+  navMain: [
+    {
+      title: "Users",
+      url: "#",
+      items: [
+        {
+          title: "View Users",
+          url: "#",
+        },
+      
+      ],
+    },
+    {
+      title: "Products  / Services",
+      url: "#",
+      items: [
+        {
+          title: "Create Service",
+          url: "#",
+        },
+        {
+          title: "View Services",
+          url: "#",
+          isActive:true
+        }
+      ],
+    },
+    {
+      title: "Providers",
+      url: "#",
+      items: [
+        {
+          title: "Components",
+          url: "#",
+        },
+       
+      ],
+    },
+    {
+      title: "Suscription",
+      url: "#",
+      items: [
+        {
+          title: "Accessibility",
+          url: "#",
+        },
+      ],
+    },
+  ],
+}
 
-    return (
-      <Sidebar variant='sidebar' collapsible='icon'>
-        <SidebarHeader />
-        <SidebarContent>
-          <SidebarGroup />
-            <SidebarGroupLabel>Applications</SidebarGroupLabel>
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  return (
+    <Sidebar {...props}>
+      <SidebarHeader>
+        <SearchForm />
+      </SidebarHeader>
+      <SidebarContent>
+        {data.navMain.map((item) => (
+          <SidebarGroup key={item.title}>
+            <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {items.map((item) => (
+                {item.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton 
-                      asChild
-                      onClick={() => onSelect(item.component)}
-                    >
-                      <button>
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </button>
+                    <SidebarMenuButton asChild isActive={item.isActive}>
+                      <a href={item.url}>{item.title}</a>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>
             </SidebarGroupContent>
-          <SidebarGroup />
-        </SidebarContent>
-        <SidebarFooter />
-      </Sidebar>
-    )
-  }
-  
-export default AppSidebar;
+          </SidebarGroup>
+        ))}
+      </SidebarContent>
+      <SidebarRail />
+    </Sidebar>
+  )
+}

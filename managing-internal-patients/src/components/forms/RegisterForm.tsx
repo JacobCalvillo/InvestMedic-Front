@@ -88,7 +88,7 @@ const RegisterForm = () => {
           fieldType={FormFieldType.PASSWORD}
           control={form.control}
           name="password"
-          label="Contraseña"
+          label='Password'
           placeholder="******"
           iconSrc="/lock-solid.svg"
           iconAlt="password"

@@ -102,11 +102,9 @@ const CancelAppointmentValidation = z.object({
 });
 
 const PaymentValidation = z.object({
-        amount: z.number(),
-        currency: z.string(),
-        description: z.string(),
-        transactionId: z.string(),
+        cardNumber: z.string(),
       });
+
 
 function getAppointmentValidation(type: string) {
         switch (type) {
