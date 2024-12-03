@@ -31,14 +31,16 @@ const LoginForm = () => {
     try {
       
       const user = await login(email, password);
-      const token = user?.data.token;
+      const token = user?.token;
 
       if (!token) {
         return;
       }
 
-      if (user) {
-        navigate('/dashboard');
+      if (user.role === 'USER') {
+        navigate('/main');
+      } else {
+        navigate('/user/page');
       }
 
     } catch (error) {

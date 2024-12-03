@@ -1,3 +1,5 @@
+import { CreditCard, Wallet, BadgeDollarSign } from "lucide-react";
+
 export enum FormFieldType {
     INPUT = 'input',
     TEXTAREA = 'textarea',
@@ -65,6 +67,24 @@ export const Doctors = [
     name: "Hardik Sharma",
   },
 ];
+
+export const methods = [ 
+  {
+    value: "debit",
+    label: "Debit Card",
+    icon: Wallet,
+  },
+  {
+    value: "credit",
+    label: "Credit Card",
+    icon: CreditCard,
+  },
+  {
+    value: "cash",
+    label: "Cash",
+    icon: BadgeDollarSign,
+  }
+ ]
 
 export const StatusIcon = {
   scheduled: "/assets/icons/check.svg",

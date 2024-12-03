@@ -1,72 +1,95 @@
+import * as React from "react"
+import { SearchForm } from '@/components/search-form'
 import {
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarGroup,
-    SidebarGroupContent,
-    SidebarGroupLabel,
-    SidebarHeader,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem
-  } from "@/components/ui/sidebar"
-  
-import { Calendar , Home, Inbox, Search, Settings } from "lucide-react"
-  
-const items  = [
-  {
-    title:"Home",
-    icon:Home,
-    url:"/",
-  },
-  {
-    title:"Inbox",
-    icon:Inbox,
-    url:"#",
-  },
-  {
-    title:"Calendar",
-    icon:Calendar,
-    url:"#",  
-  },
-  {
-    title:"Search",
-    icon:Search,
-    url:"#",
-  },
-  {
-    title:"Settings",
-    icon:Settings,
-    url:"#",
-  },
-]
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarRail,
+} from "@/components/ui/sidebar"
 
-   function AppSidebar() {
-    return (
-      <Sidebar variant='sidebar' collapsible='icon'>
-        <SidebarHeader />
-        <SidebarContent>
-          <SidebarGroup />
-            <SidebarGroupLabel>Applications</SidebarGroupLabel>
+const data = {
+  navMain: [
+    {
+      title: "Users",
+      url: "#",
+      items: [
+        {
+          title: "View Users",
+          url: "#",
+        },
+      
+      ],
+    },
+    {
+      title: "Products  / Services",
+      url: "#",
+      items: [
+        {
+          title: "Create Service",
+          url: "#",
+        },
+        {
+          title: "View Services",
+          url: "#",
+          isActive:true
+        }
+      ],
+    },
+    {
+      title: "Providers",
+      url: "#",
+      items: [
+        {
+          title: "Components",
+          url: "#",
+        },
+       
+      ],
+    },
+    {
+      title: "Suscription",
+      url: "#",
+      items: [
+        {
+          title: "Accessibility",
+          url: "#",
+        },
+      ],
+    },
+  ],
+}
+
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  return (
+    <Sidebar {...props}>
+      <SidebarHeader>
+        <SearchForm />
+      </SidebarHeader>
+      <SidebarContent>
+        {data.navMain.map((item) => (
+          <SidebarGroup key={item.title}>
+            <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {items.map((item) => (
+                {item.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <a href={item.url}>
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </a>
+                    <SidebarMenuButton asChild isActive={item.isActive}>
+                      <a href={item.url}>{item.title}</a>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>
             </SidebarGroupContent>
-          <SidebarGroup />
-        </SidebarContent>
-        <SidebarFooter />
-      </Sidebar>
-    )
-  }
-  
-export default AppSidebar;
+          </SidebarGroup>
+        ))}
+      </SidebarContent>
+      <SidebarRail />
+    </Sidebar>
+  )
+}
