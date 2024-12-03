@@ -1,6 +1,5 @@
 import { axiosInstance } from "./axios.config";
 
-
 export const getStripeClientSecret = async (amount: number, currency: string) => {
     try {
         const secret = await axiosInstance.post("/client/secret", {
