@@ -31,7 +31,4 @@ jobs:
     - name: Upload Artifact to Jenkins
       run: |
         scp -o StrictHostKeyChecking=no -i ${{ secrets.JENKINS_SSH_KEY }} \
-        -r ./build/ ${JENKINS_USER}@<JENKINS_IP>:/var/jenkins_home/frontend-artifacts/
-
-      env:
-        JENKINS_USER: ${{ secrets.JENKINS_USER }}
+        -r ./build/ ${{ secrets.JENKINS_USER }}@<JENKINS_IP>:/var/jenkins_home/frontend-artifacts/
