@@ -19,7 +19,7 @@ const login = async (email: string, password: string) => {
 const register = async (user: User) => {
     try {
         const response = await axiosInstance.post('/register', { user });
-        console.log("Response data:", response.data); // Verifica la estructura de respuesta
+        
 
         if (!response.data) {
             return null;

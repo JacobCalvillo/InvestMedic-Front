@@ -26,7 +26,6 @@ import { bgColorOnDate, displayCurrentTime } from "@/lib/utils"
 
 
 
-
 const columns: ColumnDef<Payment>[] = [
     {
         id: "select",
