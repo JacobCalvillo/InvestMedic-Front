@@ -13,11 +13,7 @@ import {
     SidebarTrigger,
   } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
-import { Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle, } from "@/components/ui/card"
+import { CustomUserCard } from "@/components/users/CustomUserCard"
 import { DataTable } from "@/components/ui/data-table"
 import { Button } from "@/components/ui/button"
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
@@ -25,7 +21,10 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { ColumnDef } from "@tanstack/react-table"
 import { Checkbox } from "@/components/ui/checkbox"
 import Payment from "@/models/Payment"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { bgColorOnDate, displayCurrentTime } from "@/lib/utils"
+
+
 
 const columns: ColumnDef<Payment>[] = [
     {
@@ -83,7 +82,7 @@ const columns: ColumnDef<Payment>[] = [
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                {/* <DropdownMenuItem
+                <DropdownMenuItem
                   onClick={() => alert(`Modify ${user}`)}
                   className="buttonMenuDropdownModify cursor-pointer"
                 >
@@ -100,7 +99,7 @@ const columns: ColumnDef<Payment>[] = [
                   className="buttonMenuDropdownDelete cursor-pointer"
                 >
                   Delete User
-                </DropdownMenuItem> */}
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           );
@@ -108,16 +107,26 @@ const columns: ColumnDef<Payment>[] = [
       },
 ]
 const UserPage = () => {
-
+    const [currentTime, setCurrentTime] = useState(displayCurrentTime());
     const [data, setData] = useState<Payment[]>([]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            const data = await getPayments();
-            setData(data);
-        };
-        fetchData();
+        const interval = setInterval(() => {
+          setCurrentTime(displayCurrentTime());
+        }, 1000);
+        return () => clearInterval(interval);
+       
     }, []);
+    
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         const data = await getPayments();
+    //         setData(data);
+    //     };
+    //     fetchData();
+    // }, []);
+  const fecha = new Date();
+  const bgColorO = bgColorOnDate(fecha);
 
     return (
         <SidebarProvider>
@@ -139,38 +148,34 @@ const UserPage = () => {
                   </BreadcrumbItem>
                 </BreadcrumbList>
               </Breadcrumb>
+              <Separator orientation="vertical" className="mx-2 h-4" />
+
+              
+              
             </header>
+            <p className="text-end mr-4">
+                {currentTime}
+              </p>
             <div className="flex">
-                <Card className="w-[400px] m-2">
-                    <CardHeader>
-                        <CardTitle>Card Title</CardTitle>
-                        <CardDescription>Card Description</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <p>Card Content</p>
-                    </CardContent>
-                </Card>
-                <Card className="w-[400px] m-2">
-                    <CardHeader>
-                        <CardTitle>Card Title</CardTitle>
-                        <CardDescription>Card Description</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <p>Card Content</p>
-                    </CardContent>
-                </Card>
-                <Card className="w-[400px] m-2">
-                    <CardHeader>
-                        <CardTitle>Card Title</CardTitle>
-                        <CardDescription>Card Description</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <p>Card Content</p>
-                    </CardContent>
-                </Card>
+              
+              <CustomUserCard 
+                className={`w-[400px] m-2 ${bgColorO}`}
+                title="Proxima Cita" 
+                content={`${fecha.toDateString()} ${currentTime}`}
+              />
+              <CustomUserCard 
+                className={`w-[400px] m-2 ${bgColorO}`} 
+                title="Proxima Cita" 
+                content={`${fecha.toDateString()} ${currentTime}`}
+              />
+              <CustomUserCard 
+                className={`w-[400px] m-2 ${bgColorO}`}
+                title="Proxima Cita" 
+                content={`${fecha.toDateString()} ${currentTime}`}
+              />
             </div>
             <div>
-                <DataTable columns={columns} data={data}/>
+              <DataTable columns={columns} data={data}/>
             </div>
 
           </SidebarInset>
