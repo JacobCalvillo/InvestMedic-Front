@@ -25,7 +25,6 @@ const getFileDocumentsUrl = async (userId: number, name: string) => {
 
     try {
         const response = await axiosInstance.get(`/file/${userId}/?folder=documents&name=${name}`);
-        console.log(response)
         if (!response.data) {
             return null;
         }

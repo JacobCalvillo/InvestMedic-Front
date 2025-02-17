@@ -1,5 +1,5 @@
 import { axiosInstance } from "./axios.config";
-import Identification from "@/models/Identification";
+import { Identification } from "@/models/Identification";
 export const createIdentification = async(identification: Identification) => {
     try {
         console.log(identification);

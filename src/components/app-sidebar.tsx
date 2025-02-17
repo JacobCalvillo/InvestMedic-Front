@@ -53,7 +53,7 @@ const data = {
       ],
     },
     {
-      title: "Suscription",
+      title: "Suscripciones",
       url: "#",
       items: [
         {

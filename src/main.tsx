@@ -15,20 +15,19 @@ import './index.css'
 import App from './App.tsx'
 import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
-import { getStripeClientSecret } from './services/stripeService.ts'
+import { UserProvider } from '../src/hooks/user-provider.tsx'
+// import { getStripeClientSecret } from './services/stripeService.ts'
 
 const stripePromise = await loadStripe(import.meta.env.VITE_STRIPE_PK as string);
-const client = await getStripeClientSecret(5000, 'mxn');
-const options = {
-  clientSecret: client,
-  appearance: {
-    theme: 'night',
-    labels: 'floating'
-  }
-}
+// const client = await getStripeClientSecret(5000, 'mxn');
 
-console.log(options)
-
+// const options = {
+//   clientSecret: client,
+//   appearance: {
+//     theme: 'night',
+//     labels: 'floating'
+//   }
+// }
 
 const router = createBrowserRouter([
   {
@@ -54,7 +53,7 @@ const router = createBrowserRouter([
   {
     path: '/appointment',
     element: 
-        <Elements stripe={stripePromise} options={options}>
+        <Elements stripe={stripePromise} /*options={options}*/>
           <Appointment />
         </Elements>,
     errorElement: <ErrorPage />,
@@ -67,7 +66,7 @@ const router = createBrowserRouter([
   {
     path:'/payment/checkout',
     element: 
-    <Elements stripe={stripePromise} options={options}>
+    <Elements stripe={stripePromise} /*options={options} */>
       <Paypage  />
     </Elements>,
     errorElement: <ErrorPage />,
@@ -81,12 +80,13 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App>
-      <div>
+    <UserProvider>
+      <App>
+        <div>
           <RouterProvider router={router} />
-            <ModeToggle />
-      </div>
-    </App>
-    
+          <ModeToggle />
+        </div>
+      </App>
+    </UserProvider>
   </StrictMode>,
 )

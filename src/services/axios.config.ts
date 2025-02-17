@@ -1,18 +1,16 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-    baseURL: `${import.meta.env.VITE_API_URL}/api`,
+    baseURL: `${import.meta.env.VITE_API_TEST_URL}/api`,
 })
 
 axiosInstance.interceptors.request.use((config) => {
-    const axiosConfig = {
+        return {
         ...config,
-    }
-    
-    return axiosConfig;
+    };
 },
     (error) => {
-        let errorMessage = 'Ocurrio un error inesperado';
+        let errorMessage = 'Ocurrió un error inesperado';
         const statusCode = error.response ? error.response.status : 500;
 
         if(error.response) {

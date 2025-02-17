@@ -1,5 +1,0 @@
-git
-docker
-junit
-credentials
-blueocean

@@ -11,10 +11,12 @@ import { registerValidation } from "@/lib/validation"
 import { User } from "@/models/User"
 import { register } from "@/services/userService"
 import { useNavigate } from "react-router-dom"
+import { useUser } from "@/hooks/user-provider.tsx";
 
 
 const RegisterForm = () => {
   const navigate = useNavigate();
+  const { setUser } = useUser();
 
   const [isLoading, setIsLoading] = React.useState(false)
 
@@ -32,13 +34,18 @@ const RegisterForm = () => {
   async function onSubmit({ email, password, phone, username }: z.infer<typeof registerValidation>) {
     setIsLoading(true);
     try {
-      const newUser = new User(username, email, phone, password);  
+      const newUser: User = {
+        email:email,
+        password: password,
+        phone: phone,
+        username: username
+      };
+
       const user = await register(newUser);
-      
-      const userId = user.id
-      
-      if (user) {
-        navigate(`/patient/register`,{ state: { userId } });
+
+      if(user) {
+        setUser(user);
+        navigate(`/patient/register`);
       }
 
     } catch (error) {

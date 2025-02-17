@@ -24,7 +24,12 @@ const patientValidation = z.object({
         name: z.string()
             .min(2, "Nombre necesita al menos 2 caracteres")
             .max(50, "Nombre no puede superar los 50 caracteres"),
+        lastName: z.string()
+            .min(2, "Apellido necesita al menos 2 caracteres")
+            .max(50, "Apellido no puede superar los 50 caracteres"),
         birthDate: z.coerce.date(),
+        weight: z.string().min(1, "Peso no puede ser menor a 1"),
+        height: z.string().min(1, "Altura no puede ser menor a 1"),
         gender: z.enum(["Male", "Female", "Other"]),
         address: z.string()
                 .min(5, "Direccion necesita al menos 5 caracteres")
@@ -32,43 +37,25 @@ const patientValidation = z.object({
         occupation: z.string()
                 .min(2, "Ocupacion necesita al menos 2 caracteres")
                 .max(50, "Ocupacion no puede superar los 50 caracteres"),
-        emergencyContactName: z.string()
-                        .min(2, "Nombre necesita al menos 2 caracteres")
-                        .max(50, "Nombre no puede superar los 50 caracteres"),
-        emergencyContactNumber: z.string()
-                        .refine(
-                                (emergencyContactNumber) => /^\+\d{10,15}$/.test(emergencyContactNumber),
-                                "Telefono no valido"
-                        ),
-        primaryPhysician: z.string().min(2, "Selecciona al menos un medico"),
-        insuranceProvider: z.string()
-                        .min(2, "Selecciona al menos un proveedor de seguro")
-                        .max(50, "Nombre no puede superar los 50 caracteres"),
-        insurancePolicyNumber: z.string()
-                        .min(2, "Selecciona al menos un proveedor de seguro")
-                        .max(50, "Nombre no puede superar los 50 caracteres"),
         allergies: z.string().optional(),
         currentMedication: z.string().optional(),
         familyMedicalHistory: z.string().optional(),
-        pastMedicalHistory: z.string().optional(),
-        identificationType: z.string().optional(),
-        identificationNumber: z.string().optional(),
+        emergencyContactName: z.string()
+            .min(2, "Nombre necesita al menos 2 caracteres")
+            .max(50, "Nombre no puede superar los 50 caracteres"),
+        emergencyContactLastName: z.string()
+            .min(2, "Apellido necesita al menos 2 caracteres")
+            .max(50, "Apellido no puede superar los 50 caracteres"),
+        emergencyContactRelationship: z.string()
+            .min(2, "Relacion necesita al menos 2 caracteres")
+            .max(50, "Relacion no puede superar los 50 caracteres"),
+        emergencyContactNumber: z.string()
+            .refine((phone) => /^\+\d{10,15}$/.test(phone),"Telefono no valido"),
+        identificationNumber: z.string()
+            .min(4, "Numero de identificacion no puede ser menor a 4")
+            .max(10, "Numero de identificacion no puede ser mayor a 10"),
         identificationDocument: z.custom<File[]>().optional(),
-        treatmentsConsent: z.boolean()
-                        .default(false)
-                        .refine((value) => value === true, {
-                                message: "Debes aceptar los terminos y condiciones",
-                        }),
-        disclosureConsent: z.boolean()
-                        .default(false)
-                        .refine((value) => value === true, {
-                            message: "Debes aceptar los términos y condiciones.",
-                        }),
-        privacyConsent: z.boolean()
-                        .default(false)
-                        .refine((value) => value === true, {
-                            message: "Debes aceptar los términos y condiciones para el manejo de datos.",
-                        }),
+        privacyConsent: z.boolean().refine((value) => value, "Debe aceptar los terminos y condiciones")
 })
 
 const CreateAppointmentValidation = z.object({
