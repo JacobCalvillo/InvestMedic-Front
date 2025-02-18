@@ -15,13 +15,12 @@ import { getStripeClientSecret } from './services/stripeService.ts'
 
 const stripePromise = await loadStripe(import.meta.env.VITE_STRIPE_PK as string);
 const client = await getStripeClientSecret(5000, 'mxn');
-const options = {
-  clientSecret: client,
-  appearance: {
-    theme: 'night',
-    labels: 'floating'
-  }
-}
+    const options = {
+      clientSecret: client as string,
+      appearance: {
+        theme: 'stripe' as const
+      }
+    }
 
 console.log(options)
 

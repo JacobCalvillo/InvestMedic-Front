@@ -14,25 +14,22 @@ import FileUploader from "../FileUploader";
 import { getIdentificationTypes } from "@/services/identificationTypesService";
 import IdentificationsType from "@/models/IdentificationsType";
 
-const IdentificationDialog = ({ control }: { control: any }) => {
-  // State to store fetched data
+const IdentificationDialog = ({ control }: { control: any}) => {
   const [identificationTypes, setIdentificationTypes] = useState<IdentificationsType[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchIdentificationTypes = async () => {
       try {
-        const types = await getIdentificationTypes(); // Await async function
-        console.log("Fetched identification types:", types);
-        setIdentificationTypes(types || []); // Ensure it's always an array
+        const types = await getIdentificationTypes();
+        setIdentificationTypes(types || []);
       } catch (error) {
         console.error("Error fetching identification types:", error);
       } finally {
         setLoading(false);
       }
     };
-
-    fetchIdentificationTypes();
+    fetchIdentificationTypes().then(r => console.error(r));
   }, []);
 
   return (
@@ -45,23 +42,22 @@ const IdentificationDialog = ({ control }: { control: any }) => {
             <DialogTitle>Identificación y Verificación</DialogTitle>
           </DialogHeader>
           <div className="space-y-6">
-            <CustomFormField
-                fieldType={FormFieldType.SELECT}
-                control={control}
-                name="identificationType"
-                label="Tipo de Identificación"
-                placeholder="Selecciona un tipo de identificación"
-            >
-              {loading ? (
-                  <p>Cargando...</p>
-              ) : (
-                  identificationTypes.map((id) => (
-                      <SelectItem key={id.id} value={id.id}>
-                        {id.type} {/* Assuming "type" is the correct field */}
-                      </SelectItem>
-                  ))
-              )}
-            </CustomFormField>
+              <CustomFormField
+                  fieldType={FormFieldType.SELECT}
+                  control={control}
+                  name="identificationType"
+                  label="Tipo de Identificación"
+                  placeholder="Selecciona un tipo de identificación"
+              >
+                  {loading ? (
+                      <p>Cargando...</p>
+                  ) : (identificationTypes.map((identification) => (
+                          <SelectItem key={identification.id} value={identification.id?.toString() || "No hay datos"} >
+                              {identification.id} {identification.type}
+                          </SelectItem>
+                      ))
+                  )}
+              </CustomFormField>
 
             <CustomFormField
                 fieldType={FormFieldType.INPUT}

@@ -15,11 +15,11 @@ import './index.css'
 import App from './App.tsx'
 import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
-import { UserProvider } from '../src/hooks/user-provider.tsx'
-// import { getStripeClientSecret } from './services/stripeService.ts'
+import { UserProvider } from '@/hooks/user-provider.tsx'
+//import { getStripeClientSecret } from './services/stripeService.ts'
 
 const stripePromise = await loadStripe(import.meta.env.VITE_STRIPE_PK as string);
-// const client = await getStripeClientSecret(5000, 'mxn');
+//const client = await getStripeClientSecret(5000, 'mxn');
 
 // const options = {
 //   clientSecret: client,
@@ -52,7 +52,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/appointment',
-    element: 
+    element:
         <Elements stripe={stripePromise} /*options={options}*/>
           <Appointment />
         </Elements>,
@@ -65,7 +65,7 @@ const router = createBrowserRouter([
   },
   {
     path:'/payment/checkout',
-    element: 
+    element:
     <Elements stripe={stripePromise} /*options={options} */>
       <Paypage  />
     </Elements>,

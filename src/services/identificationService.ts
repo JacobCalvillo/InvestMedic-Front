@@ -2,7 +2,6 @@ import { axiosInstance } from "./axios.config";
 import { Identification } from "@/models/Identification";
 export const createIdentification = async(identification: Identification) => {
     try {
-        console.log(identification);
         const response = await axiosInstance.post('/identification', identification );
 
         return response.data;

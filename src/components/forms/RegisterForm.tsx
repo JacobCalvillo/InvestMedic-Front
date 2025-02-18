@@ -16,6 +16,8 @@ import { useUser } from "@/hooks/user-provider.tsx";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   const { setUser } = useUser();
 
   const [isLoading, setIsLoading] = React.useState(false)

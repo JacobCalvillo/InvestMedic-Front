@@ -5,26 +5,28 @@ import { z } from "zod";
 import { Form, FormControl } from "@/components/ui/form";
 import CustomFormField from "../CustomFormField";
 import SubmitButton from "../SubmitButton";
-import { patientUserValidation } from "@/lib/validation";
+import { patientValidation } from "@/lib/validation";
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from "../ui/label";
 import { useNavigate } from "react-router-dom";
-import IdentificacionDialog from "../dialogs/IdentificationDialog";
+import IdentificationDialog from "../dialogs/IdentificationDialog";
 import { FormFieldType, GenderOptions } from "@/constants";
 import { useUser } from "@/hooks/user-provider";
 import { registerPatient } from "@/services/patientService";
-import Patient from "../../models/Patient";
-import Identification from "@/models/Identification";
+import {Patient} from "@/models/Patient.ts";
+import {Identification} from "@/models/Identification";
 import { createIdentification } from "@/services/identificationService";
 import { fileUploadDocuments, getFileDocumentsUrl } from "@/services/fileService";
 
 const RegisterUserPatientForm = () => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   const { user } = useUser();
   const [isLoading, setIsLoading] = React.useState(false);
   const navigate = useNavigate();
 
-  const form = useForm<z.infer<typeof patientUserValidation>>({
-    resolver: zodResolver(patientUserValidation),
+  const form = useForm<z.infer<typeof patientValidation>>({
+    resolver: zodResolver(patientValidation),
     defaultValues: {
       name: "",
       lastName: "",
@@ -45,56 +47,55 @@ const RegisterUserPatientForm = () => {
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof patientUserValidation>) => {
+  const onSubmit = async (values: z.infer<typeof patientValidation>) => {
     setIsLoading(true);
     
     try {
-      await fileUploadDocuments(
-        values.identificationDocument[0], 
-        user.id
-      );
+      if (values.identificationDocument && values.identificationDocument.length > 0) {
+        await fileUploadDocuments(
+          values.identificationDocument[0], 
+          user.id
+        );
+      } else {
+        console.error("Identification document is missing.");
+      }
       
-      const documentUrl = await getFileDocumentsUrl(user.id, values.identificationDocument[0].name);
+      const documentUrl = values.identificationDocument?.[0]
+        ? await getFileDocumentsUrl(user.id, values.identificationDocument[0].name)
+        : null;
 
       // 3. Crear identificación
-      const newIdentification = await createIdentification(new Identification(
-        values.identificationTypeId,
-        values.identificationNumber,
-        documentUrl.image
-      ));
+      const identification: Identification = {
+        number: values.identificationNumber,
+        identificationTypeId: Number(values.identificationType),
+        identificationDocumentUrl: documentUrl.image
+      }
+      const newIdentification = await createIdentification(identification);
       console.log(newIdentification);
 
       // 4. Crear paciente con la nueva identificación
-      const patient = new Patient(
-        values.name,
-        values.lastName,
-        values.birthDate,
-        null,
-        null,
-        values.gender,
-        values.address,
-        null,
-        values.occupation,
-        values.emergencyContactName,
-        values.emergencyContactLastName,
-        values.emergencyContactRelationship,
-        values.emergencyContactNumber,
-        null,
-        values.allergies,
-        values.currentMedication,
-        '',
-        '',
-        newIdentification.id, 
-        null,
-        null,
-        values.privacyConsent,
-        user?.id
-      );
+      const newPatient: Patient = {
+        name: values.name,
+        lastName: values.lastName,
+        birthDate: values.birthDate,
+        gender: values.gender,
+        address: values.address,
+        occupation: values.occupation,
+        emergencyContactName: values.emergencyContactName,
+        emergencyContactLastName: values.emergencyContactLastName,
+        emergencyContactRelationship: values.emergencyContactRelationship,
+        emergencyContactNumber: values.emergencyContactNumber,
+        allergies: values.allergies,
+        currentMedication: values.currentMedication,
+        identificationId: newIdentification.id,
+        privacyConsent: values.privacyConsent,
+        userId: user.id
+      }
       
-      console.log(patient);
-      const newPatient = await registerPatient(patient);
       console.log(newPatient);
-      if (newPatient?.id) {
+      const patient = await registerPatient(newPatient);
+      console.log(patient);
+      if (patient?.id) {
         navigate('/appointment');
       }
       
@@ -257,7 +258,7 @@ const RegisterUserPatientForm = () => {
 
         <section className="space-y-6">
           <div className="mb-9 space-y-1">
-            <IdentificacionDialog control={form.control}/>
+            <IdentificationDialog control={form.control}/>
           </div>
         </section>
 

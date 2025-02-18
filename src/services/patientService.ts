@@ -1,5 +1,5 @@
 import { axiosInstance } from "./axios.config"
-import Patient from "@/models/Patient";
+import { Patient } from "@/models/Patient";
 
 const registerPatient = async (patient: Patient) => {
     try {

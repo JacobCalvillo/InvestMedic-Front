@@ -16,11 +16,14 @@ import { registerPatient } from "@/services/patientService"
 import { Patient } from "@/models/Patient.ts"
 import { Identification } from "@/models/Identification.ts"
 import {fileUploadDocuments, getFileDocumentsUrl} from "@/services/fileService.ts";
-import { createIdentification } from '../../services/identificationService.ts'
+import { createIdentification } from '@/services/identificationService.ts'
 
 const RegisterUserPatientForm = () => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   const { user } = useUser();
   const [isLoading, setIsLoading] = React.useState(false);
+
   const navigate = useNavigate();
 
 
@@ -42,10 +45,11 @@ const RegisterUserPatientForm = () => {
       allergies: "",
       currentMedication: "",
       identificationNumber: "",
+      identificationType: "",
       identificationDocument: [],
       privacyConsent: false
     },
-  });
+  })
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof patientValidation>) {
@@ -58,41 +62,40 @@ const RegisterUserPatientForm = () => {
         const fileUrl = await getFileDocumentsUrl(user.id, fileName);
 
         const identification : Identification = {
-              identificationTypeId: values.identificationDocument.id,
+              identificationTypeId: Number(values.identificationType),
               number: values.identificationNumber,
               identificationDocumentUrl: fileUrl
         }
         //crear documentos
         const newIdentification = await createIdentification(identification);
 
+        if(newIdentification.id !== null) {
+          // Crear la instancia del paciente
+          const patient: Patient = {
+            name: values.name,
+            lastName: values.lastName,
+            birthDate: values.birthDate,
+            weight: Number(values.weight),
+            height: Number(values.height),
+            gender: values.gender,
+            address: values.address,
+            occupation: values.occupation,
+            emergencyContactName: values.emergencyContactName,
+            emergencyContactLastName: values.emergencyContactLastName,
+            emergencyContactRelationship: values.emergencyContactRelationship,
+            emergencyContactNumber: values.emergencyContactNumber,
+            allergies: values.allergies,
+            currentMedication: values.currentMedication,
+            userId: user.id,
+            privacyConsent: values.privacyConsent,
+            identificationId: newIdentification.id
+          }
+          const newPatient = await registerPatient(patient);
+          console.log(newPatient);
 
-        // Crear la instancia del paciente
-        const patient: Patient = {
-          name: values.name,
-          lastName: values.lastName,
-          birthDate: values.birthDate,
-          weight: Number(values.weight),
-          height: Number(values.height),
-          gender: values.gender,
-          address: values.address,
-          occupation: values.occupation,
-          emergencyContactName: values.emergencyContactName,
-          emergencyContactLastName: values.emergencyContactLastName,
-          emergencyContactRelationship: values.emergencyContactRelationship,
-          emergencyContactNumber: values.emergencyContactNumber,
-          allergies: values.allergies,
-          currentMedication: values.currentMedication,
-          userId: user.id,
-          privacyConsent: values.privacyConsent,
-          //identificationId: values.identificationDocument
-        }
-
-        // Registrar el paciente
-        const newPatient = await registerPatient(patient);
-        console.log(newPatient);
-
-        if (newPatient) {
-          navigate('/appointment', { state: { patientId: newPatient.id } });
+          if (newPatient) {
+            navigate('/appointment', { state: { patientId: newPatient.id } });
+          }
         }
       }
 
@@ -107,13 +110,13 @@ const RegisterUserPatientForm = () => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex-1">
           <section className="space-y-4">
-            <h1 className="text-4xl font-bold">Cuentanos Mas Sobre Ti</h1>
+            <h1 className="text-4xl font-bold">Cuéntanos Mas Sobre Ti</h1>
           </section>
 
           <section className="space-y-6">
             <div className="mb-9 space-y-1">
               <h2 className="text-lg font-semibold">
-                Informacion Personal
+                Información Personal
               </h2>
             </div>
           </section>
@@ -275,7 +278,7 @@ const RegisterUserPatientForm = () => {
 
           <section className="space-y-6">
             <div className="mb-9 space-y-1">
-              <IdentificationDialog control={form.control} onSubmit={onSubmit} />
+              <IdentificationDialog control={form.control}  />
             </div>
           </section>
 

@@ -2,8 +2,8 @@ export interface Patient {
     name: string;
     lastName: string;
     birthDate: Date;
-    weight: number;
-    height: number;
+    weight?: number;
+    height?: number;
     gender: string;
     maritalStatusId?: number;
     address: string;
@@ -21,5 +21,5 @@ export interface Patient {
     privacyConsent: boolean;
     consentId?: number;
     userId:number;
-    identificationId?: number;
+    identificationId: number;
 }

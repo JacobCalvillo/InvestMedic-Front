@@ -28,8 +28,6 @@ const patientValidation = z.object({
             .min(2, "Apellido necesita al menos 2 caracteres")
             .max(50, "Apellido no puede superar los 50 caracteres"),
         birthDate: z.coerce.date(),
-        weight: z.string().min(1, "Peso no puede ser menor a 1"),
-        height: z.string().min(1, "Altura no puede ser menor a 1"),
         gender: z.enum(["Male", "Female", "Other"]),
         address: z.string()
                 .min(5, "Direccion necesita al menos 5 caracteres")
@@ -54,6 +52,7 @@ const patientValidation = z.object({
         identificationNumber: z.string()
             .min(4, "Numero de identificacion no puede ser menor a 4")
             .max(10, "Numero de identificacion no puede ser mayor a 10"),
+        identificationType: z.string(),
         identificationDocument: z.custom<File[]>().optional(),
         privacyConsent: z.boolean().refine((value) => value, "Debe aceptar los terminos y condiciones")
 })

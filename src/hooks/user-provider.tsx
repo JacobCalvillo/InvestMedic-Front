@@ -1,6 +1,6 @@
-import { createContext, PropsWithChildren, useContext, useState } from "react";
+import React, { createContext, PropsWithChildren, useContext, useState } from "react";
 
-const UserContext = createContext(null);
+const UserContext = createContext<{ user: null; setUser: React.Dispatch<React.SetStateAction<null>> } | null>(null);
 
 export const UserProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] = useState(null);
