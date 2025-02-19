@@ -14,15 +14,15 @@ import UserPage from './pages/UserPage.tsx'
 import './index.css'
 import App from './App.tsx'
 import { Elements } from '@stripe/react-stripe-js'
-import { loadStripe } from '@stripe/stripe-js'
+import {loadStripe, StripeElementsOptions} from '@stripe/stripe-js'
 import { UserProvider } from '@/hooks/user-provider.tsx'
 import { getStripeClientSecret } from './services/stripeService.ts'
 
 const stripePromise = await loadStripe(import.meta.env.VITE_STRIPE_PK as string);
 const client = await getStripeClientSecret(5000, 'mxn');
 
-const options = {
-  clientSecret: client,
+const options: StripeElementsOptions = {
+  clientSecret: client.client_secret,
   appearance: {
     theme: 'night',
     labels: 'floating'

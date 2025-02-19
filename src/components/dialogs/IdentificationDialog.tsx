@@ -12,7 +12,7 @@ import { SelectItem } from "../ui/select";
 import { Button } from "../ui/button";
 import FileUploader from "../FileUploader";
 import { getIdentificationTypes } from "@/services/identificationTypesService";
-import IdentificationsType from "@/models/IdentificationsType";
+import {IdentificationsType} from "@/models/IdentificationsType";
 
 const IdentificationDialog = ({ control }: { control: any}) => {
   const [identificationTypes, setIdentificationTypes] = useState<IdentificationsType[]>([]);
