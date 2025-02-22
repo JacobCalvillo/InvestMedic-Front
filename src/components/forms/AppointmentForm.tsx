@@ -9,13 +9,15 @@ import { Doctors, FormFieldType } from "@/constants"
 import SubmitButton from "../SubmitButton"
 import { SelectItem } from "../ui/select"
 import PaymentDialog from "./PaymentDialog"
+import { getMedicalPractitioners} from "@/services/medicalPractitioner.service.ts";
 
 
 const AppointmentForm = ({ type }: { type: "create" | "cancel" | "schedule" }) => {
     const [isLoading, setIsLoading] = React.useState(false);
     const [isDialogOpen, setIsDialogOpen] = React.useState(false);
     const [selectedPaymentMethod, setSelectedPaymentMethod] = React.useState('');
-    
+    const [doctors, setDoctors] = React.useState<any[]>([]); // Estado para los médicos
+
     const AppointmentFormValidation = getAppointmentValidation(type);
 
     const form = useForm<z.infer<typeof AppointmentFormValidation>>({
@@ -29,13 +31,24 @@ const AppointmentForm = ({ type }: { type: "create" | "cancel" | "schedule" }) =
         },
         mode: "onChange", // Esto actualiza la validación en tiempo real
     });
+    React.useEffect(() => {
+        async function fetchDoctors() {
+            try {
+                const medicalPractitioners = await getMedicalPractitioners();
+                setDoctors(medicalPractitioners);
+            } catch (error) {
+                console.error("Error fetching medical practitioners:", error);
+            }
+        }
+        fetchDoctors();
+    }, []);
+
 
     async function onSubmit(values: z.infer<typeof AppointmentFormValidation>) {
         setIsLoading(true);
 
         try {
             console.log("Form submitted:", values);
-        
             setIsDialogOpen(true); // Cierra el diálogo después de enviar
         } catch (error) {
             console.error(error);
@@ -76,11 +89,11 @@ const AppointmentForm = ({ type }: { type: "create" | "cancel" | "schedule" }) =
                             label="Doctor principal"
                             placeholder="Selecciona un doctor"
                         >
-                            {Doctors.map((doctor) => (
+                            {doctors.map((doctor) => (
                                 <SelectItem key={doctor.name} value={doctor.name}>
                                     <div className="flex cursor-pointer items-center gap-2">
                                         <img
-                                            src={doctor.image}
+                                            src={doctor.user.profile_picture_url}
                                             alt={doctor.name}
                                             width={32}
                                             height={32}
