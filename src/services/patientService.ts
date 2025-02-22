@@ -1,9 +1,11 @@
 import { axiosInstance } from "./axios.config"
 import { Patient } from "@/models/Patient";
 
-const registerPatient = async (patient: Patient) => {
+const registerPatient = async (patient: Patient, identificationNumber:string, identificationUrl:string,
+                               identificationTypeId:string) => {
     try {
-        const response = await axiosInstance.post('/patient', { patient });
+        const response = await axiosInstance
+            .post(`/patient?identificationNumber=${identificationNumber}&identificationUrl=${identificationUrl}&identificationTypeId=${identificationTypeId}`, patient);
         console.log(response.data);
         return response.data;
     } catch (error) {

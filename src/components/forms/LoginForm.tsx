@@ -31,17 +31,20 @@ const LoginForm = () => {
     try {
       
       const user = await login(email, password);
-      const token = user?.token;
+      //const token = user?.token;
 
-      if (!token) {
-        return;
+      // if (!token) {
+      //   return;
+      // }
+      if(user) {
+        navigate(`/user/page`);
       }
 
-      if (user.role === 'USER') {
-        navigate('/main');
-      } else {
-        navigate('/user/page');
-      }
+      // if (user.role === 'USER') {
+      //   navigate('/main');
+      // } else {
+      //   navigate('/user/page');
+      // }
 
     } catch (error) {
       console.log(error);

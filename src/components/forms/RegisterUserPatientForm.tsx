@@ -13,9 +13,7 @@ import IdentificationDialog from "../dialogs/IdentificationDialog";
 import { FormFieldType, GenderOptions } from "@/constants";
 import { useUser } from "@/hooks/user-provider";
 import { registerPatient } from "@/services/patientService";
-import {Patient} from "@/models/Patient.ts";
-import {Identification} from "@/models/Identification";
-import { createIdentification } from "@/services/identificationService";
+import { Patient } from "@/models/Patient.ts";
 import { fileUploadDocuments, getFileDocumentsUrl } from "@/services/fileService";
 
 const RegisterUserPatientForm = () => {
@@ -32,14 +30,16 @@ const RegisterUserPatientForm = () => {
       lastName: "",
       birthDate: new Date(Date.now()),
       gender: "Male",
-      address: "",
+      street: "",
+      city: "",
+      state: "",
+      postalCode: "",
       occupation: "",
       emergencyContactName: "",
       emergencyContactLastName: "",
       emergencyContactNumber: "",
       emergencyContactRelationship: "",
-      allergies: "",
-      currentMedication: "",
+      maritalStatus: "",
       identificationNumber: "",
       identificationType: "",
       identificationDocument: [],
@@ -64,38 +64,34 @@ const RegisterUserPatientForm = () => {
         ? await getFileDocumentsUrl(user.id, values.identificationDocument[0].name)
         : null;
 
-      // 3. Crear identificación
-      const identification: Identification = {
-        number: values.identificationNumber,
-        identificationTypeId: Number(values.identificationType),
-        identificationDocumentUrl: documentUrl.image
-      }
-      const newIdentification = await createIdentification(identification);
-      console.log(newIdentification);
-
       // 4. Crear paciente con la nueva identificación
       const newPatient: Patient = {
         name: values.name,
         lastName: values.lastName,
         birthDate: values.birthDate,
         gender: values.gender,
-        address: values.address,
+        street:values.street,
+        city: values.city,
+        state: values.state,
+        postalCode: values.postalCode,
         occupation: values.occupation,
         emergencyContactName: values.emergencyContactName,
         emergencyContactLastName: values.emergencyContactLastName,
         emergencyContactRelationship: values.emergencyContactRelationship,
         emergencyContactNumber: values.emergencyContactNumber,
-        allergies: values.allergies,
-        currentMedication: values.currentMedication,
-        identificationId: newIdentification.id,
+        maritalStatus: values.maritalStatus,
         privacyConsent: values.privacyConsent,
         userId: user.id
       }
-      
-      console.log(newPatient);
-      const patient = await registerPatient(newPatient);
-      console.log(patient);
-      if (patient?.id) {
+
+      const patient = await registerPatient(
+          newPatient,
+          values.identificationNumber,
+          documentUrl.image,
+          values.identificationType
+      );
+
+      if (patient) {
         navigate('/appointment');
       }
       
@@ -178,26 +174,58 @@ const RegisterUserPatientForm = () => {
             )}
             placeholder="+54 11 1234 5678"
           />
+          <CustomFormField
+              fieldType={FormFieldType.INPUT}
+              control={form.control}
+              name="occupation"
+              label="Ocupación"
+              placeholder="Profesional"
+          />
+          <CustomFormField
+              fieldType={FormFieldType.INPUT}
+              control={form.control}
+              name="maritalStatus"
+              label="Estado Civil"
+              placeholder="Casado, Soltero, etc..."
+          />
         </div>
 
         <div className="flex flex-col gap-6 xl:flex-row">
           <CustomFormField
             fieldType={FormFieldType.INPUT}
             control={form.control}
-            name="address"
-            label="Dirección"
-            placeholder="Calle 123 #123"
+            name="street"
+            label="Calle"
+            placeholder="Calle 123 Colonia 'example'"
           />
-
+          <CustomFormField
+              fieldType={FormFieldType.INPUT}
+              control={form.control}
+              name="city"
+              label="Ciudad"
+              placeholder="Monterrey..."
+          />
           <CustomFormField
             fieldType={FormFieldType.INPUT}
             control={form.control}
-            name="occupation"
-            label="Ocupación"
-            placeholder="Profesional"
+            name="state"
+            label="Estado"
+            placeholder="Nuevo Leon"
+          />
+          <CustomFormField
+              fieldType={FormFieldType.INPUT}
+              control={form.control}
+              name="postalCode"
+              label="Codigo Postal"
+              placeholder="66633"
           />
         </div>
 
+        <section className="space-y-6">
+          <div className="mb-9 space-y-1">
+            <h2 className="text-lg font-semibold">Informacion Contacto</h2>
+          </div>
+        </section>
         <div className="flex flex-col gap-6 xl:flex-row">
           <CustomFormField
             fieldType={FormFieldType.INPUT}
@@ -229,30 +257,6 @@ const RegisterUserPatientForm = () => {
             name="emergencyContactRelationship"
             label="Relacion de Contacto de Emergencia"
             placeholder="Madre, Padre, etc..."
-          />
-        </div>
-
-        <section className="space-y-6">
-          <div className="mb-9 space-y-1">
-            <h2 className="text-lg font-semibold">Informacion Medica</h2>
-          </div>
-        </section>
-
-        <div className="flex flex-col gap-6 xl:flex-row">
-          <CustomFormField
-            fieldType={FormFieldType.TEXTAREA}
-            control={form.control}
-            name="allergies"
-            label="Alergias"
-            placeholder="Penicilina, cacahuates..."
-          />
-
-          <CustomFormField
-            fieldType={FormFieldType.TEXTAREA}
-            control={form.control}
-            name="currentMedication"
-            label="Medicacion Actual (si hay)"
-            placeholder="Penicilina, paracetamol, insulina"
           />
         </div>
 

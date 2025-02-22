@@ -29,7 +29,7 @@ const IdentificationDialog = ({ control }: { control: any}) => {
         setLoading(false);
       }
     };
-    fetchIdentificationTypes().then(r => console.error(r));
+    fetchIdentificationTypes();
   }, []);
 
   return (

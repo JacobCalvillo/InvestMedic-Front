@@ -5,21 +5,16 @@ export interface Patient {
     weight?: number;
     height?: number;
     gender: string;
-    maritalStatusId?: number;
-    address: string;
+    street:string;
+    city:string;
+    state:string;
+    postalCode:string;
     occupation: string;
-    allergies?: string;
-    currentMedication?: string;
-    familyMedicalHistory?: string;
-    pastMedicalHistory?: string;
     emergencyContactName: string;
     emergencyContactLastName: string;
     emergencyContactRelationship: string;
     emergencyContactNumber: string;
-    insuranceId?: number;
-    gynecobstetricsId?: number;
+    maritalStatus?: string;
     privacyConsent: boolean;
-    consentId?: number;
     userId:number;
-    identificationId: number;
 }
