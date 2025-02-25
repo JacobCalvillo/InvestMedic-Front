@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import SubmitButton from '../SubmitButton';
 import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js';
 import { PaymentIntent, StripeError } from '@stripe/stripe-js';

@@ -5,7 +5,7 @@ import { z } from "zod";
 import { Form, FormControl } from "@/components/ui/form";
 import CustomFormField from "../CustomFormField";
 import SubmitButton from "../SubmitButton";
-import { patientValidation } from "@/lib/validation";
+import { patientValidation } from "@/lib/validations/patient.validation.ts";
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from "../ui/label";
 import { useNavigate } from "react-router-dom";
@@ -90,9 +90,9 @@ const RegisterUserPatientForm = () => {
           documentUrl.image,
           values.identificationType
       );
-
+      console.log(patient.id);
       if (patient) {
-        navigate('/appointment');
+        navigate('/appointment', { state: { patient } });
       }
       
     } catch (error) {

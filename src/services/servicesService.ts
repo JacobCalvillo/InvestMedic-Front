@@ -9,7 +9,7 @@ export const getServices = async () => {
     }
 };
 
-export const getServiceById = async (id: string) => {
+export const getServiceById = async (id: number) => {
     try {
         const response = await axiosInstance.get(`/service/${id}`);
         return response.data;

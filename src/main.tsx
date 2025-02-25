@@ -13,49 +13,19 @@ import Paypage from './pages/PayPage.tsx'
 import UserPage from './pages/UserPage.tsx'
 import './index.css'
 import App from './App.tsx'
-import { Elements } from '@stripe/react-stripe-js'
-import { loadStripe, Stripe, StripeElementsOptionsClientSecret } from '@stripe/stripe-js'
 import { UserProvider } from '@/hooks/user-provider.tsx'
-import { getStripeClientSecret } from './services/stripeService.ts'
 
 // Función asíncrona inmediatamente invocada
 (async () => {
-  const stripePromise: Promise<Stripe | null> = loadStripe(import.meta.env.VITE_STRIPE_PK as string)
 
-  const client = await getStripeClientSecret(5000, 'mxn')
-  console.log(client)
-  const clientOptions: StripeElementsOptionsClientSecret = {
-    clientSecret: client,
-    appearance: { theme: 'night', labels: 'floating' }
-  }
 
   const router = createBrowserRouter([
     { path: '/login', element: <Login />, errorElement: <ErrorPage /> },
     { path: '/register', element: <Register />, errorElement: <ErrorPage /> },
     { path: '/patient/register', element: <Patient />, errorElement: <ErrorPage /> },
     { path: '/main', element: <MainRenderer />, errorElement: <ErrorPage /> },
-    {
-      path: '/appointment',
-      element: client && stripePromise ? (
-          <Elements stripe={stripePromise} options={clientOptions}>
-            <Appointment />
-          </Elements>
-      ) : (
-          <p>Error cargando Stripe...</p>
-      ),
-      errorElement: <ErrorPage />,
-    },
-    {
-      path: '/payment/checkout',
-      element: client ? (
-          <Elements stripe={stripePromise} options={clientOptions}>
-            <Paypage />
-          </Elements>
-      ) : (
-          <p>Cargando...</p>
-      ),
-      errorElement: <ErrorPage />,
-    },
+    { path: '/appointment', element:  <Appointment />, errorElement: <ErrorPage /> },
+    { path: '/payment/checkout', element: <Paypage />, errorElement: <ErrorPage /> },
     { path: '/success', element: <Success />, errorElement: <ErrorPage /> },
     { path: '/user/page', element: <UserPage />, errorElement: <ErrorPage /> },
   ])

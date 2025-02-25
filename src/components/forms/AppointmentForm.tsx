@@ -1,33 +1,42 @@
 import React from "react"
-import { getAppointmentValidation } from "@/lib/validation"
+import { useLocation } from "react-router-dom";
+import { CreateAppointmentValidation, getAppointmentValidation } from "@/lib/validations/appointment.validation.ts"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Form } from "../ui/form"
 import CustomFormField from "@/components/CustomFormField"
-import { Doctors, FormFieldType } from "@/constants"
+import { FormFieldType } from "@/constants"
 import SubmitButton from "../SubmitButton"
 import { SelectItem } from "../ui/select"
-import PaymentDialog from "./PaymentDialog"
 import { getMedicalPractitioners} from "@/services/medicalPractitioner.service.ts";
+import { getServices } from '@/services/servicesService.ts'
+import { MedicalPractitioner } from "@/models/MedicalPractitioner";
+import { Service } from '@/models/Service.ts'
+import {createAppointment} from "@/services/appointmentService.ts";
+import {Appointment} from "@/models/Appointment.ts";
+import { useNavigate } from "react-router-dom"
+import {Patient} from "@/models/Patient.ts";
+//import AvailableDatePicker from "../AvailableDatePicker";
 
 
 const AppointmentForm = ({ type }: { type: "create" | "cancel" | "schedule" }) => {
-    const [isLoading, setIsLoading] = React.useState(false);
-    const [isDialogOpen, setIsDialogOpen] = React.useState(false);
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = React.useState('');
-    const [doctors, setDoctors] = React.useState<any[]>([]); // Estado para los médicos
+    const { state } = useLocation();
+    const patient: Patient = state?.patient;
 
+    const [isLoading, setIsLoading] = React.useState(false)
+    const [doctors, setDoctors] = React.useState<MedicalPractitioner[]>([]);
+    const [services, setServices] = React.useState<Service[]>([]);
+    const navigate = useNavigate();
     const AppointmentFormValidation = getAppointmentValidation(type);
 
-    const form = useForm<z.infer<typeof AppointmentFormValidation>>({
+    const form = useForm<z.infer<typeof CreateAppointmentValidation>>({
         resolver: zodResolver(AppointmentFormValidation),
         defaultValues: {
             primaryPhysician: "",
             schedule: new Date(),
             reason: "",
-            note: "",
-            cancellationReason: "",
+            service:""
         },
         mode: "onChange", // Esto actualiza la validación en tiempo real
     });
@@ -35,7 +44,9 @@ const AppointmentForm = ({ type }: { type: "create" | "cancel" | "schedule" }) =
         async function fetchDoctors() {
             try {
                 const medicalPractitioners = await getMedicalPractitioners();
+                const services = await getServices();
                 setDoctors(medicalPractitioners);
+                setServices(services);
             } catch (error) {
                 console.error("Error fetching medical practitioners:", error);
             }
@@ -44,12 +55,29 @@ const AppointmentForm = ({ type }: { type: "create" | "cancel" | "schedule" }) =
     }, []);
 
 
-    async function onSubmit(values: z.infer<typeof AppointmentFormValidation>) {
+    async function onSubmit(values: z.infer<typeof CreateAppointmentValidation>) {
         setIsLoading(true);
-
         try {
             console.log("Form submitted:", values);
-            setIsDialogOpen(true); // Cierra el diálogo después de enviar
+            console.log(patient);
+            if (patient != null && patient.id != null) {
+                const appointment : Appointment = {
+                    startTime: values.schedule,
+                    reason: values.reason,
+                    statusId:5,
+                    patientId: patient.id,
+                    serviceId: Number(values.service),
+                    medicalPractitionerId: Number(values.primaryPhysician)
+                }
+                const newAppointment = await createAppointment(appointment);
+                console.log(newAppointment);
+
+                if (newAppointment) {
+                    navigate("/payment/checkout", { state: newAppointment })
+                }
+
+            }
+
         } catch (error) {
             console.error(error);
         }
@@ -90,10 +118,10 @@ const AppointmentForm = ({ type }: { type: "create" | "cancel" | "schedule" }) =
                             placeholder="Selecciona un doctor"
                         >
                             {doctors.map((doctor) => (
-                                <SelectItem key={doctor.name} value={doctor.name}>
+                                <SelectItem key={doctor.name} value={doctor.id?.toString()}>
                                     <div className="flex cursor-pointer items-center gap-2">
                                         <img
-                                            src={doctor.user.profile_picture_url}
+                                            src={doctor.user?.profile_picture_url}
                                             alt={doctor.name}
                                             width={32}
                                             height={32}
@@ -104,7 +132,10 @@ const AppointmentForm = ({ type }: { type: "create" | "cancel" | "schedule" }) =
                                 </SelectItem>
                             ))}
                         </CustomFormField>
-
+                        {/*
+                        TODO Implementar available date picker correctamente para que aparezcan los horarios disponibles
+                            es decir comparar los appointments vs medicalpractitioneravailability
+                        */}
                         <CustomFormField
                             fieldType={FormFieldType.DATEPICKER}
                             control={form.control}
@@ -124,14 +155,21 @@ const AppointmentForm = ({ type }: { type: "create" | "cancel" | "schedule" }) =
                                 label="Razon de la consulta"
                                 placeholder="Motivo de la consulta"
                             />
-
+                        </div>
+                        <div className="flex flex-col gap-6 xl:flex-row">
                             <CustomFormField
-                                fieldType={FormFieldType.TEXTAREA}
+                                fieldType={FormFieldType.SELECT}
                                 control={form.control}
-                                name="note"
-                                label="Notas"
-                                placeholder="Ingresa tus notas"
-                            />
+                                name="service"
+                                label="Servicio"
+                                placeholder="Seleccione un Servicio..."
+                            >
+                                {services.map((service) => (
+                                    <SelectItem key={service.id} value={service.id?.toString()}>
+                                        {service.name}
+                                    </SelectItem>
+                                ))}
+                            </CustomFormField>
                         </div>
                     </>
                 )}
@@ -154,14 +192,7 @@ const AppointmentForm = ({ type }: { type: "create" | "cancel" | "schedule" }) =
                     {buttonLabel}
                 </SubmitButton>
 
-                {type !== "cancel" && (
-                    <PaymentDialog
-                        paymentMethod={selectedPaymentMethod}
-                        isDialogOpen={isDialogOpen}
-                        handleDialogClose={() => setIsDialogOpen(false)}
-                        setSelectedPaymentMethod={setSelectedPaymentMethod}
-                    />
-                )}
+
             </form>
         </Form>
     );

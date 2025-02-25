@@ -1,9 +1,10 @@
 export interface Appointment {
     id?:number;
-    patientId: number;
-    doctorId: number;
-    schedule: Date;
-    reason: string;
-    notes?: string;
-    status?: string;
+    startTime: Date;
+    endTime?: Date;
+    reason?:string
+    statusId:number;
+    patientId:number;
+    medicalPractitionerId:number;
+    serviceId:number;
 }

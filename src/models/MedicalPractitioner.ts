@@ -1,4 +1,7 @@
+import { User } from "./User";
+
 export interface MedicalPractitioner {
+    user?: User;
     id?: number;
     name: string;
     lastName: string;

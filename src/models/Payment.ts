@@ -1,12 +1,9 @@
 export interface Payment {
     id?: number;
-    amount: number;
+    stripePaymentId?: string;
+    amount?: number;
     currency: string;
-    transactionId: string;
-    method: string;
-    status: "pending" | "processing" | "success" | "failed";
-    gateway: string;
-    bank: string;
-    description?: string;
+    paymentMethodId: number;
     patientId: number;
+    invoiceId?: number;
 }
