@@ -38,7 +38,7 @@ const AppointmentForm = ({ type }: { type: "create" | "cancel" | "schedule" }) =
             reason: "",
             service:""
         },
-        mode: "onChange", // Esto actualiza la validación en tiempo real
+        mode: "onChange",
     });
     React.useEffect(() => {
         async function fetchDoctors() {
@@ -118,7 +118,8 @@ const AppointmentForm = ({ type }: { type: "create" | "cancel" | "schedule" }) =
                             placeholder="Selecciona un doctor"
                         >
                             {doctors.map((doctor) => (
-                                <SelectItem key={doctor.name} value={doctor.id?.toString()}>
+                                <SelectItem key={doctor.name} value={doctor.id?.toString() ||
+                                    "No se cargaron los doctores correctamente"}>
                                     <div className="flex cursor-pointer items-center gap-2">
                                         <img
                                             src={doctor.user?.profile_picture_url}
@@ -165,7 +166,8 @@ const AppointmentForm = ({ type }: { type: "create" | "cancel" | "schedule" }) =
                                 placeholder="Seleccione un Servicio..."
                             >
                                 {services.map((service) => (
-                                    <SelectItem key={service.id} value={service.id?.toString()}>
+                                    <SelectItem key={service.id} value={service.id?.toString() ||
+                                        "No se cargaron los servicios"}>
                                         {service.name}
                                     </SelectItem>
                                 ))}
@@ -187,7 +189,6 @@ const AppointmentForm = ({ type }: { type: "create" | "cancel" | "schedule" }) =
                     type="submit"
                     isLoading={isLoading}
                     className={`${type === "cancel" ? "bg-red-800 text-white" : "shad-primary-btn"} w-full`}
-                    
                 >
                     {buttonLabel}
                 </SubmitButton>

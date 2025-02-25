@@ -7,13 +7,15 @@ import { getServiceById } from "@/services/servicesService.ts";
 import { useEffect, useState } from "react";
 import {Appointment} from "@/models/Appointment.ts";
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PK as string);
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PK as string, {
+    betas:["custom_checkout_beta_5"]
+});
 
 const Paypage = () => {
-    const { state }: Appointment = useLocation();
+    const { state } = useLocation();
     const serviceId: number = state?.service_id;
     console.log(serviceId);
-    const [service, setService] = useState<Appointment>();
+    const [, setService] = useState<Appointment>();
     const [clientSecret, setClientSecret] = useState<string | null>(null);
 
     useEffect(() => {
@@ -51,7 +53,7 @@ const Paypage = () => {
                             <CheckoutForm />
                         </Elements>
                     ) : (
-                        <p>Cargando información de pago...</p>
+                        <div className="spinner"></div>
                     )}
                 </div>
             </section>

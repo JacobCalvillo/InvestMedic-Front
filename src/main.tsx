@@ -7,7 +7,7 @@ import { MainRenderer } from './pages/MainRenderer.tsx'
 import { Patient } from './pages/PatientPage.tsx'
 import { Appointment } from './pages/AppointmentPage.tsx'
 import Success from './pages/SuccessPage.tsx'
-import ModeToggle from './components/mode-toggle.tsx'
+import { ModeToggle } from './components/mode-toggle.tsx';
 import ErrorPage from './pages/error-page.tsx'
 import Paypage from './pages/PayPage.tsx'
 import UserPage from './pages/UserPage.tsx'

@@ -9,7 +9,7 @@ type AppProps = {
 function App({ children }: AppProps) {
   
   return (
-    <ThemeProvider>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         {children}
     </ThemeProvider>
   )
