@@ -29,7 +29,7 @@ const AvailableDatePicker: React.FC<AvailableDatePickerProps> = ({ doctorId, dat
 
                 // Generar intervalos de 30 min dentro del rango
                 const allTimes = [];
-                let current = new Date(startTime);
+                const current = new Date(startTime);
                 while (current < endTime) {
                     allTimes.push(new Date(current));
                     current.setMinutes(current.getMinutes() + 30);

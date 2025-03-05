@@ -1,28 +1,19 @@
 import { axiosInstance } from "./axios.config";
+import { StripeSession } from "@/models/StripeSession.ts";
 
-export const getStripeClientSecret = async (amount: number, currency: string) => {
+
+export const createCheckoutSession = async (
+    session: StripeSession,
+) => {
     try {
-        const secret = await axiosInstance.post("/client/secret", {
-            amount: amount,
-            currency: currency,
-        });
-
-        return secret.data.client_secret;
+        const response = await axiosInstance.post('/services/stripe', session)
+        console.log(response.data)
+        if(response.status === 200) {
+            return response.data.url;
+        }
+        return null;
     } catch (error) {
         return error;
     }
 }
 
-export const stripePayment = async (paymentMethod: number, amount: number, currency: string) => {
-    try {
-        const secret = await axiosInstance.post("/client/payment", {
-            amount: amount,
-            currency: currency,
-            paymentMethod: paymentMethod
-        });
-
-        return secret.data.client_secret;
-    } catch (error) {
-        return error;
-    }
-}

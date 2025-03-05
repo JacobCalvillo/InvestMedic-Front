@@ -15,19 +15,22 @@ import { MedicalPractitioner } from "@/models/MedicalPractitioner";
 import { Service } from '@/models/Service.ts'
 import {createAppointment} from "@/services/appointmentService.ts";
 import {Appointment} from "@/models/Appointment.ts";
-import { useNavigate } from "react-router-dom"
+//import { useNavigate } from "react-router-dom"
 import {Patient} from "@/models/Patient.ts";
+import {createCheckoutSession} from "@/services/stripeService.ts";
 //import AvailableDatePicker from "../AvailableDatePicker";
-
+import {useUser} from "@/hooks/user-provider.tsx";
+import { StripeSession } from "@/models/StripeSession.ts";
 
 const AppointmentForm = ({ type }: { type: "create" | "cancel" | "schedule" }) => {
     const { state } = useLocation();
     const patient: Patient = state?.patient;
+    const { user } = useUser();
 
     const [isLoading, setIsLoading] = React.useState(false)
     const [doctors, setDoctors] = React.useState<MedicalPractitioner[]>([]);
     const [services, setServices] = React.useState<Service[]>([]);
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const AppointmentFormValidation = getAppointmentValidation(type);
 
     const form = useForm<z.infer<typeof CreateAppointmentValidation>>({
@@ -60,30 +63,44 @@ const AppointmentForm = ({ type }: { type: "create" | "cancel" | "schedule" }) =
         try {
             console.log("Form submitted:", values);
             console.log(patient);
-            if (patient != null && patient.id != null) {
-                const appointment : Appointment = {
+
+            if (patient && patient.id) {
+                const appointment: Appointment = {
                     startTime: values.schedule,
                     reason: values.reason,
-                    statusId:5,
+                    statusId: 6, // PENDING_PAYMENT
                     patientId: patient.id,
                     serviceId: Number(values.service),
                     medicalPractitionerId: Number(values.primaryPhysician)
-                }
+                };
+
+                // Crear cita en estado PENDING_PAYMENT
                 const newAppointment = await createAppointment(appointment);
-                console.log(newAppointment);
+                console.log("Cita creada:", newAppointment);
 
                 if (newAppointment) {
-                    navigate("/payment/checkout", { state: newAppointment })
+                    const session: StripeSession = {
+                        serviceId: Number(values.service),
+                        customerEmail: user.email,
+                        quantity: 1,
+                        appointmentId: newAppointment.id // Pasamos el ID de la cita a Stripe
+                    };
+
+
+                    const url = await createCheckoutSession(session);
+                    console.log("URL de pago:", url);
+
+                    if (url) {
+                        window.location.href = url;
+                    }
                 }
-
             }
-
         } catch (error) {
             console.error(error);
         }
-
         setIsLoading(false);
     }
+
 
     let buttonLabel;
 

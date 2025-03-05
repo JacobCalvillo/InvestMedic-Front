@@ -9,7 +9,6 @@ import { Appointment } from './pages/AppointmentPage.tsx'
 import Success from './pages/SuccessPage.tsx'
 import { ModeToggle } from './components/mode-toggle.tsx';
 import ErrorPage from './pages/error-page.tsx'
-import Paypage from './pages/PayPage.tsx'
 import UserPage from './pages/UserPage.tsx'
 import './index.css'
 import App from './App.tsx'
@@ -25,7 +24,6 @@ import { UserProvider } from '@/hooks/user-provider.tsx'
     { path: '/patient/register', element: <Patient />, errorElement: <ErrorPage /> },
     { path: '/main', element: <MainRenderer />, errorElement: <ErrorPage /> },
     { path: '/appointment', element:  <Appointment />, errorElement: <ErrorPage /> },
-    { path: '/payment/checkout', element: <Paypage />, errorElement: <ErrorPage /> },
     { path: '/success', element: <Success />, errorElement: <ErrorPage /> },
     { path: '/user/page', element: <UserPage />, errorElement: <ErrorPage /> },
   ])
