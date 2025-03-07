@@ -12,7 +12,6 @@ import { register } from "@/services/userService"
 import { useNavigate } from "react-router-dom"
 import { useUser } from "@/hooks/user-provider.tsx";
 
-
 const RegisterForm = () => {
   const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -36,23 +35,23 @@ const RegisterForm = () => {
     setIsLoading(true);
     try {
       const newUser: User = {
-        email:email,
+        email: email,
         password: password,
         phone: phone,
         username: username
       };
 
       const user = await register(newUser);
-      console.log(user);
-      if(user) {
+      console.log(user.user);
+      if (user) {
         setUser(user);
         navigate(`/patient/register`);
       }
-
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }
 
   return (

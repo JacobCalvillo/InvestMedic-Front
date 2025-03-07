@@ -1,5 +1,4 @@
 import React from "react"
-import { useLocation } from "react-router-dom";
 import { CreateAppointmentValidation, getAppointmentValidation } from "@/lib/validations/appointment.validation.ts"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -15,17 +14,19 @@ import { MedicalPractitioner } from "@/models/MedicalPractitioner";
 import { Service } from '@/models/Service.ts'
 import {createAppointment} from "@/services/appointmentService.ts";
 import {Appointment} from "@/models/Appointment.ts";
+import { User } from "@/models/User.ts";
 //import { useNavigate } from "react-router-dom"
-import {Patient} from "@/models/Patient.ts";
 import {createCheckoutSession} from "@/services/stripeService.ts";
 //import AvailableDatePicker from "../AvailableDatePicker";
 import {useUser} from "@/hooks/user-provider.tsx";
 import { StripeSession } from "@/models/StripeSession.ts";
+import {Patient} from "@/models/Patient.ts";
 
 const AppointmentForm = ({ type }: { type: "create" | "cancel" | "schedule" }) => {
-    const { state } = useLocation();
-    const patient: Patient = state?.patient;
-    const { user } = useUser();
+
+    const patient = JSON.parse(localStorage.getItem("patient") as string);
+
+    const { user } = useUser() as unknown as { user: User };
 
     const [isLoading, setIsLoading] = React.useState(false)
     const [doctors, setDoctors] = React.useState<MedicalPractitioner[]>([]);
@@ -64,7 +65,7 @@ const AppointmentForm = ({ type }: { type: "create" | "cancel" | "schedule" }) =
             console.log("Form submitted:", values);
             console.log(patient);
 
-            if (patient && patient.id) {
+            if (patient) {
                 const appointment: Appointment = {
                     startTime: values.schedule,
                     reason: values.reason,

@@ -6,8 +6,11 @@ const registerPatient = async (patient: Patient, identificationNumber:string, id
     try {
         const response = await axiosInstance
             .post(`/patient?identificationNumber=${identificationNumber}&identificationUrl=${identificationUrl}&identificationTypeId=${identificationTypeId}`, patient);
-        console.log(response.data);
-        return response.data;
+        console.log(response.status);
+        if(response.status == 201) {
+            return response.data;
+        }
+        return null;
     } catch (error) {
         return error;
     }

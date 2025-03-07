@@ -53,8 +53,8 @@ const RegisterUserPatientForm = () => {
     try {
       if (values.identificationDocument && values.identificationDocument.length > 0) {
         await fileUploadDocuments(
-          values.identificationDocument[0], 
-          user.id
+          values.identificationDocument[0],
+            user.user.id
         );
       } else {
         console.error("Identification document is missing.");
@@ -81,7 +81,7 @@ const RegisterUserPatientForm = () => {
         emergencyContactNumber: values.emergencyContactNumber,
         maritalStatus: values.maritalStatus,
         privacyConsent: values.privacyConsent,
-        userId: user.id
+        userId: user.user.id
       }
 
       const patient = await registerPatient(
@@ -90,9 +90,9 @@ const RegisterUserPatientForm = () => {
           documentUrl.image,
           values.identificationType
       );
-      console.log(patient.id);
       if (patient) {
-        navigate('/appointment', { state: { patient } });
+        localStorage.setItem("patient", JSON.stringify(patient));
+        navigate('/appointment');
       }
       
     } catch (error) {
