@@ -1,6 +1,6 @@
 import { axiosInstance } from "./axios.config";
 
-const fileUploadDocuments = async (file: File, userId: number) => {
+const fileUploadDocuments = async (file: File, userId: number | undefined) => {
 
     try {
         const formData = new FormData();
@@ -21,7 +21,7 @@ const fileUploadDocuments = async (file: File, userId: number) => {
     }
 };
 
-const getFileDocumentsUrl = async (userId: number, name: string) => {
+const getFileDocumentsUrl = async (userId: number | undefined, name: string) => {
 
     try {
         const response = await axiosInstance.get(`/file/${userId}/?folder=documents&name=${name}`);

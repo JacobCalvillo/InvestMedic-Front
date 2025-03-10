@@ -11,14 +11,13 @@ import { User } from "@/models/User"
 import { register } from "@/services/userService"
 import { useNavigate } from "react-router-dom"
 import { useUser } from "@/hooks/user-provider.tsx";
+import { useMobile } from "@/components/MobileProvider.tsx";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
-  const { setUser } = useUser();
-
-  const [isLoading, setIsLoading] = React.useState(false)
+  const { setUser } = useUser() as unknown as { setUser: (user: User) => void };
+  const [isLoading, setIsLoading] = React.useState(false);
+  const isMobile = useMobile();
 
   const form = useForm<z.infer<typeof registerValidation>>({
     resolver: zodResolver(registerValidation),
@@ -28,9 +27,8 @@ const RegisterForm = () => {
       password: "",
       phone: "",
     },
-  })
+  });
 
-  // 2. Define a submit handler.
   async function onSubmit({ email, password, phone, username }: z.infer<typeof registerValidation>) {
     setIsLoading(true);
     try {
@@ -42,9 +40,9 @@ const RegisterForm = () => {
       };
 
       const user = await register(newUser);
-      console.log(user.user);
+
       if (user) {
-        setUser(user);
+        setUser(user.user);
         navigate(`/patient/register`);
       }
     } catch (error) {
@@ -56,12 +54,10 @@ const RegisterForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex-1">
-
+      <form onSubmit={form.handleSubmit(onSubmit)} className={`space-y-8 flex-1 p-6 ${isMobile ? 'bg-white shadow-md rounded-lg' : ''}`}>
         <section className="mb-12 space-y-4">
-            <p className="text-3xl">Registrate.</p>
+          <p className="text-3xl text-center">Registrate.</p>
         </section>
-
 
         <CustomFormField
           fieldType={FormFieldType.INPUT}
@@ -100,7 +96,7 @@ const RegisterForm = () => {
           iconSrc="/lock-solid.svg"
           iconAlt="password"
         />
-        
+
         <SubmitButton isLoading={isLoading}>Sign Up</SubmitButton>
       </form>
     </Form>

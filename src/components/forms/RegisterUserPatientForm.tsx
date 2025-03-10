@@ -16,11 +16,12 @@ import { registerPatient } from "@/services/patientService";
 import { Patient } from "@/models/Patient.ts";
 import { fileUploadDocuments, getFileDocumentsUrl } from "@/services/fileService";
 import { useMobile } from "@/components/MobileProvider.tsx";
+import {User} from "@/models/User.ts";
 
 const RegisterUserPatientForm = () => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
-  const { user } = useUser();
+
+  const { user } = useUser() as unknown as { user: User };
+
   const [isLoading, setIsLoading] = React.useState(false);
   const navigate = useNavigate();
   const isMobile = useMobile();
@@ -56,7 +57,7 @@ const RegisterUserPatientForm = () => {
       if (values.identificationDocument && values.identificationDocument.length > 0) {
         await fileUploadDocuments(
           values.identificationDocument[0],
-            user.user.id
+            user.id
         );
       } else {
         console.error("Identification document is missing.");
@@ -82,8 +83,9 @@ const RegisterUserPatientForm = () => {
         emergencyContactNumber: values.emergencyContactNumber,
         maritalStatus: values.maritalStatus,
         privacyConsent: values.privacyConsent,
-        userId: user.user.id
+        userId: user.id as number,
       }
+      console.log(newPatient);
 
       const patient = await registerPatient(
           newPatient,
@@ -91,6 +93,7 @@ const RegisterUserPatientForm = () => {
           documentUrl.image,
           values.identificationType
       );
+      console.log(patient);
       if (patient) {
         localStorage.setItem("patient", JSON.stringify(patient));
         navigate('/appointment');
