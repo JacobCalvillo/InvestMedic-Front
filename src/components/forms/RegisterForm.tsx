@@ -54,7 +54,7 @@ const RegisterForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className={`space-y-8 flex-1 p-6 ${isMobile ? 'bg-white shadow-md rounded-lg' : ''}`}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className={`space-y-8 flex-1 p-6 ${isMobile ? 'shadow-md rounded-lg' : ''}`}>
         <section className="mb-12 space-y-4">
           <p className="text-3xl text-center">Registrate.</p>
         </section>
