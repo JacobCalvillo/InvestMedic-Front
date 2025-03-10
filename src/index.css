@@ -1,4 +1,21 @@
 @tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  .remove-scrollbar::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+  }
+  .remove-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .remove-scrollbar::-webkit-scrollbar-thumb {
+    background: transparent;
+  }
+}
+
+@tailwind base;
 * {
   scrollbar-width: thin;
   scrollbar-color: #1d2023 #404449;

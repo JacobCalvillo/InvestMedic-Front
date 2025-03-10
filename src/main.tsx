@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import { Login } from './pages/LoginPage.tsx'
 import { Register } from './pages/RegisterPage.tsx'
 import { MainRenderer } from './pages/MainRenderer.tsx'
@@ -16,24 +16,28 @@ import { UserProvider } from '@/hooks/user-provider.tsx'
 import { MobileProvider } from "@/components/MobileProvider.tsx";
 
 const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Navigate to="/register" /> // Redirigir automáticamente a /register
+  },
   { path: '/login', element: <Login />, errorElement: <ErrorPage /> },
   { path: '/register', element: <Register />, errorElement: <ErrorPage /> },
   { path: '/patient/register', element: <Patient />, errorElement: <ErrorPage /> },
   { path: '/main', element: <MainRenderer />, errorElement: <ErrorPage /> },
-  { path: '/appointment', element:  <Appointment />, errorElement: <ErrorPage /> },
+  { path: '/appointment', element: <Appointment />, errorElement: <ErrorPage /> },
   { path: '/success', element: <Success />, errorElement: <ErrorPage /> },
   { path: '/user/page', element: <UserPage />, errorElement: <ErrorPage /> },
 ])
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <MobileProvider>
-      <UserProvider>
-        <App>
-          <RouterProvider router={router} />
-          <ModeToggle />
-        </App>
-      </UserProvider>
-    </MobileProvider>
-  </StrictMode>
+    <StrictMode>
+      <MobileProvider>
+        <UserProvider>
+          <App>
+            <RouterProvider router={router} />
+            <ModeToggle />
+          </App>
+        </UserProvider>
+      </MobileProvider>
+    </StrictMode>
 )

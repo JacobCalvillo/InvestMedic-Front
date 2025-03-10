@@ -1,4 +1,3 @@
-// import RegisterPatientForm from "@/components/forms/RegisterPatientForm"
 import RegisterUserPatientForm from "@/components/forms/RegisterUserPatientForm.tsx";
 
 const Patient = () => {

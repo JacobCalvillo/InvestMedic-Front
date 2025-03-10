@@ -15,6 +15,7 @@ import { useUser } from "@/hooks/user-provider";
 import { registerPatient } from "@/services/patientService";
 import { Patient } from "@/models/Patient.ts";
 import { fileUploadDocuments, getFileDocumentsUrl } from "@/services/fileService";
+import { useMobile } from "@/components/MobileProvider.tsx";
 
 const RegisterUserPatientForm = () => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -22,6 +23,7 @@ const RegisterUserPatientForm = () => {
   const { user } = useUser();
   const [isLoading, setIsLoading] = React.useState(false);
   const navigate = useNavigate();
+  const isMobile = useMobile();
 
   const form = useForm<z.infer<typeof patientValidation>>({
     resolver: zodResolver(patientValidation),
@@ -49,7 +51,7 @@ const RegisterUserPatientForm = () => {
 
   const onSubmit = async (values: z.infer<typeof patientValidation>) => {
     setIsLoading(true);
-    
+
     try {
       if (values.identificationDocument && values.identificationDocument.length > 0) {
         await fileUploadDocuments(
@@ -59,12 +61,11 @@ const RegisterUserPatientForm = () => {
       } else {
         console.error("Identification document is missing.");
       }
-      
+
       const documentUrl = values.identificationDocument?.[0]
         ? await getFileDocumentsUrl(user.id, values.identificationDocument[0].name)
         : null;
 
-      // 4. Crear paciente con la nueva identificación
       const newPatient: Patient = {
         name: values.name,
         lastName: values.lastName,
@@ -94,7 +95,7 @@ const RegisterUserPatientForm = () => {
         localStorage.setItem("patient", JSON.stringify(patient));
         navigate('/appointment');
       }
-      
+
     } catch (error) {
       console.error("Error en el registro:", error);
       alert("Error en el proceso de registro. Intente nuevamente.");
@@ -105,9 +106,9 @@ const RegisterUserPatientForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex-1">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex-1 p-6  shadow-md rounded-lg">
         <section className="space-y-4">
-          <h1 className="text-4xl font-bold">Cuentanos Mas Sobre Ti</h1>
+          <h1 className="text-4xl font-bold text-center">Cuentanos Mas Sobre Ti</h1>
         </section>
 
         <section className="space-y-6">
@@ -116,7 +117,7 @@ const RegisterUserPatientForm = () => {
           </div>
         </section>
 
-        <div className="flex gap-4">
+        <div className={`flex ${isMobile ? 'flex-col' : 'gap-4'}`}>
           <CustomFormField
             fieldType={FormFieldType.INPUT}
             control={form.control}
@@ -138,7 +139,7 @@ const RegisterUserPatientForm = () => {
           />
         </div>
 
-        <div className="flex flex-col gap-6 xl:flex-row">
+        <div className={`flex ${isMobile ? 'flex-col' : 'gap-6 xl:flex-row'}`}>
           <CustomFormField
             fieldType={FormFieldType.DATEPICKER}
             control={form.control}
@@ -190,7 +191,7 @@ const RegisterUserPatientForm = () => {
           />
         </div>
 
-        <div className="flex flex-col gap-6 xl:flex-row">
+        <div className={`flex ${isMobile ? 'flex-col' : 'gap-6 xl:flex-row'}`}>
           <CustomFormField
             fieldType={FormFieldType.INPUT}
             control={form.control}
@@ -226,7 +227,7 @@ const RegisterUserPatientForm = () => {
             <h2 className="text-lg font-semibold">Informacion Contacto</h2>
           </div>
         </section>
-        <div className="flex flex-col gap-6 xl:flex-row">
+        <div className={`flex ${isMobile ? 'flex-col' : 'gap-6 xl:flex-row'}`}>
           <CustomFormField
             fieldType={FormFieldType.INPUT}
             control={form.control}
