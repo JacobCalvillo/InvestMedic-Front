@@ -14,28 +14,23 @@ import './index.css'
 import App from './App.tsx'
 import { UserProvider } from '@/hooks/user-provider.tsx'
 
-// Función asíncrona inmediatamente invocada
-(async () => {
+const router = createBrowserRouter([
+  { path: '/login', element: <Login />, errorElement: <ErrorPage /> },
+  { path: '/register', element: <Register />, errorElement: <ErrorPage /> },
+  { path: '/patient/register', element: <Patient />, errorElement: <ErrorPage /> },
+  { path: '/main', element: <MainRenderer />, errorElement: <ErrorPage /> },
+  { path: '/appointment', element:  <Appointment />, errorElement: <ErrorPage /> },
+  { path: '/success', element: <Success />, errorElement: <ErrorPage /> },
+  { path: '/user/page', element: <UserPage />, errorElement: <ErrorPage /> },
+])
 
-
-  const router = createBrowserRouter([
-    { path: '/login', element: <Login />, errorElement: <ErrorPage /> },
-    { path: '/register', element: <Register />, errorElement: <ErrorPage /> },
-    { path: '/patient/register', element: <Patient />, errorElement: <ErrorPage /> },
-    { path: '/main', element: <MainRenderer />, errorElement: <ErrorPage /> },
-    { path: '/appointment', element:  <Appointment />, errorElement: <ErrorPage /> },
-    { path: '/success', element: <Success />, errorElement: <ErrorPage /> },
-    { path: '/user/page', element: <UserPage />, errorElement: <ErrorPage /> },
-  ])
-
-  createRoot(document.getElementById('root')!).render(
-      <StrictMode>
-        <UserProvider>
-          <App>
-            <RouterProvider router={router} />
-            <ModeToggle />
-          </App>
-        </UserProvider>
-      </StrictMode>
-  )
-})()
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <UserProvider>
+      <App>
+        <RouterProvider router={router} />
+        <ModeToggle />
+      </App>
+    </UserProvider>
+  </StrictMode>
+)
