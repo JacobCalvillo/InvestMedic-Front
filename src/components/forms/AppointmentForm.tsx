@@ -20,7 +20,6 @@ import {createCheckoutSession} from "@/services/stripeService.ts";
 //import AvailableDatePicker from "../AvailableDatePicker";
 import {useUser} from "@/hooks/user-provider.tsx";
 import { StripeSession } from "@/models/StripeSession.ts";
-import {Patient} from "@/models/Patient.ts";
 
 const AppointmentForm = ({ type }: { type: "create" | "cancel" | "schedule" }) => {
 
