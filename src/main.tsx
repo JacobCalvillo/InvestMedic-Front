@@ -13,6 +13,7 @@ import UserPage from './pages/UserPage.tsx'
 import './index.css'
 import App from './App.tsx'
 import { UserProvider } from '@/hooks/user-provider.tsx'
+import { MobileProvider } from "@/components/MobileProvider.tsx";
 
 const router = createBrowserRouter([
   { path: '/login', element: <Login />, errorElement: <ErrorPage /> },
@@ -26,11 +27,13 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <UserProvider>
-      <App>
-        <RouterProvider router={router} />
-        <ModeToggle />
-      </App>
-    </UserProvider>
+    <MobileProvider>
+      <UserProvider>
+        <App>
+          <RouterProvider router={router} />
+          <ModeToggle />
+        </App>
+      </UserProvider>
+    </MobileProvider>
   </StrictMode>
 )
