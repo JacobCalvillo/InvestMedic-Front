@@ -10,7 +10,6 @@ import SubmitButton from "../SubmitButton"
 import { login } from "@/services/userService"
 import { useNavigate } from "react-router-dom"
 
-
 const LoginForm = () => {
 
   const navigate = useNavigate();
