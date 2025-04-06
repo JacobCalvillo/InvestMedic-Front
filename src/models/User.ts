@@ -1,10 +1,11 @@
-
+// src/models/User.ts
 export interface User {
     id?: number;
     username: string;
-    phone: string;
     email: string;
-    password: string;
-    profile_picture_url?: string;
+    password?: string;
+    phone: string;
+    profilePictureUrl?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
-  

@@ -14,6 +14,7 @@ import './index.css'
 import App from './App.tsx'
 import { UserProvider } from '@/hooks/user-provider.tsx'
 import { MobileProvider } from "@/components/MobileProvider.tsx";
+import ProtectedRoute from "@/components/ProtectedRoutes.tsx";
 
 const router = createBrowserRouter([
   {
@@ -21,12 +22,17 @@ const router = createBrowserRouter([
     element: <Navigate to="/register" /> // Redirigir automáticamente a /register
   },
   { path: '/login', element: <Login />, errorElement: <ErrorPage /> },
-  { path: '/register', element: <Register />, errorElement: <ErrorPage /> },
-  { path: '/patient/register', element: <Patient />, errorElement: <ErrorPage /> },
-  { path: '/main', element: <MainRenderer />, errorElement: <ErrorPage /> },
-  { path: '/appointment', element: <Appointment />, errorElement: <ErrorPage /> },
-  { path: '/success', element: <Success />, errorElement: <ErrorPage /> },
-  { path: '/user/page', element: <UserPage />, errorElement: <ErrorPage /> },
+  {path: '/register', element: <Register/>, errorElement: <ErrorPage/>},
+  {
+    element: <ProtectedRoute/>,
+    children: [
+      {path: '/patient/register', element: <Patient/>, errorElement: <ErrorPage/>},
+      {path: '/main', element: <MainRenderer/>, errorElement: <ErrorPage/>},
+      {path: '/appointment', element: <Appointment/>, errorElement: <ErrorPage/>},
+      {path: '/success', element: <Success/>, errorElement: <ErrorPage/>},
+      {path: '/user/page', element: <UserPage/>, errorElement: <ErrorPage/>}
+    ]
+  }
 ])
 
 createRoot(document.getElementById('root')!).render(

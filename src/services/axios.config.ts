@@ -1,51 +1,41 @@
+// src/services/axios.config.ts
 import axios from "axios";
 
 const axiosInstance = axios.create({
-    baseURL: `${import.meta.env.VITE_API_TEST_URL}/api/v1`,
-})
+    baseURL: `${import.meta.env.VITE_API_URL}/api/v1`,
+});
 
+// Interceptor para añadir el token a las solicitudes
 axiosInstance.interceptors.request.use((config) => {
-        return {
-        ...config,
-    };
-},
-    (error) => {
-        let errorMessage = 'Ocurrió un error inesperado';
-        const statusCode = error.response ? error.response.status : 500;
+    const token = localStorage.getItem('token');
 
-        if(error.response) {
-            switch (error.response.status) {
-                case 400:
-                    errorMessage = 'Solicitud incorrecta';
-                    break;
-                case 401:
-                    errorMessage = 'No autorizado. Inicia sesion de nuevo.';
-                    break;
-                case 403:
-                    errorMessage = 'Prohibido';
-                    break;
-                case 404:
-                    errorMessage = 'No encontrado';
-                    break;
-                case 500:
-                    errorMessage = 'Error interno del servidor';
-                    break;
-                default:
-                    errorMessage = error.response.data.message || errorMessage;
-                    break;
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+}, (error) => {
+    return Promise.reject(error);
+});
+
+// Interceptor para manejar errores de respuesta
+axiosInstance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response) {
+            // Si recibimos un 401 Unauthorized, podemos redirigir al login
+            if (error.response.status === 401) {
+                localStorage.removeItem('token');
+                window.location.href = '/login';
             }
-        } else if (error.request) {
-            errorMessage = 'No responde el servidor';
-        } else { 
-            errorMessage = error.message;
+
+            // Puedes manejar otros códigos de error según sea necesario
+
+            return Promise.reject(error.response.data);
         }
 
-        return Promise.reject({
-            errorMessage,
-            statusCode,
-            response: error.response ? error.response.data : null
-        });
-    });
+        return Promise.reject(error);
+    }
+);
 
-export { axiosInstance }
-
+export { axiosInstance };
