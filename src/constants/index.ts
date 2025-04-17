@@ -8,7 +8,9 @@ export enum FormFieldType {
     DATEPICKER = 'datePicker',
     SELECT = 'select',
     SKELETON = 'skeleton',
-    PASSWORD = 'password'
+    PASSWORD = 'password',
+    RANGE = 'range',
+    COLOR = 'color',
 }
 
 

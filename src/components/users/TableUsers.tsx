@@ -1,10 +1,10 @@
-import { DataTable } from "@/components/ui/data-table"
+import { DataTable } from "@/shared/components/ui/data-table"
 import { ColumnDef } from "@tanstack/react-table"
 import { User } from "@/models/User"
 import { getUsers } from "@/services/userService"
 import { useState, useEffect } from 'react';
 import { ArrowUpDown } from "lucide-react";
-import { Button } from "../ui/button"
+import { Button } from "@/shared/components/ui/button"
 import { MoreHorizontal } from "lucide-react";
 
 import {
@@ -13,8 +13,8 @@ import {
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuTrigger,
-  } from "@/components/ui/dropdown-menu"
-import { Checkbox } from "@/components/ui/checkbox"
+  } from "@/shared/components/ui/dropdown-menu"
+import { Checkbox } from "@/shared/components/ui/checkbox"
 
 const columns: ColumnDef<User>[] = [
     {
