@@ -1,4 +1,4 @@
-import { axiosInstance } from "./axios.config";
+import { axiosInstance } from "../core/api/axios.config.ts";
 
 const fileUploadDocuments = async (file: File, userId: number | undefined) => {
 

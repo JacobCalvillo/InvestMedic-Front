@@ -1,4 +1,4 @@
-import { useSidebar } from "./ui/sidebar";
+import { useSidebar } from "@/shared/components/ui/sidebar";
 
 const CustomTriggerSidebar = () => {
     const  { toggleSidebar } = useSidebar();

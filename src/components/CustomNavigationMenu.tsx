@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils/utils.ts";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -7,7 +7,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
+} from "@/shared/components/ui/navigation-menu";
 
 interface NavigationItem {
   title: string;

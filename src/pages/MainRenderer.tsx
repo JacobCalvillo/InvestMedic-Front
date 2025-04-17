@@ -1,4 +1,4 @@
-import { Dashboard } from "./DashboardPage";
+import { Dashboard } from "../features/dashboard/pages/DashboardPage.tsx";
 
 const MainRenderer = () => {
 
